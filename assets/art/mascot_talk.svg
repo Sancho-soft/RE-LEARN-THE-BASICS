@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 280" width="260" height="280">
+  <!-- Ground shadow -->
+  <ellipse cx="130" cy="256" rx="72" ry="14" fill="#2F4858" opacity="0.18"/>
+
+  <!-- Feet (Sunny Yellow) -->
+  <path d="M92 234 C86 248, 108 250, 110 234" fill="#FFD166" stroke="#2F4858" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M150 234 C152 250, 174 248, 168 234" fill="#FFD166" stroke="#2F4858" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Cute Ear Tufts -->
+  <path d="M62 78 C52 44, 86 46, 94 68" fill="#219EBC" stroke="#2F4858" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M198 78 C208 44, 174 46, 166 68" fill="#219EBC" stroke="#2F4858" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Left Wing (cheering up!) -->
+  <path d="M56 140 C22 118, 18 158, 52 178" fill="#219EBC" stroke="#2F4858" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Right Wing (waving high!) -->
+  <path d="M204 136 C236 108, 248 148, 212 174" fill="#219EBC" stroke="#2F4858" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Main Round Body -->
+  <ellipse cx="130" cy="148" rx="82" ry="92" fill="#219EBC" stroke="#2F4858" stroke-width="8"/>
+  <path d="M74 90 C88 68, 112 62, 132 62" fill="none" stroke="#8ECAE6" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Cozy Cream Belly -->
+  <ellipse cx="130" cy="176" rx="56" ry="54" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+
+  <!-- Eye Patch Circles (Cream) -->
+  <circle cx="98" cy="116" r="28" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+  <circle cx="162" cy="116" r="28" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+
+  <!-- Happy wide eyes -->
+  <circle cx="102" cy="114" r="12" fill="#2F4858"/>
+  <circle cx="98" cy="109" r="4.5" fill="#FFF8E7"/>
+  <circle cx="158" cy="114" r="12" fill="#2F4858"/>
+  <circle cx="154" cy="109" r="4.5" fill="#FFF8E7"/>
+
+  <!-- Rosy Cheeks -->
+  <ellipse cx="72" cy="138" rx="11" ry="6.5" fill="#FF6B6B" opacity="0.72"/>
+  <ellipse cx="188" cy="138" rx="11" ry="6.5" fill="#FF6B6B" opacity="0.72"/>
+
+  <!-- Open Happy Speaking Beak -->
+  <path d="M117 125 Q130 118 143 125 L130 136 Z" fill="#FFD166" stroke="#2F4858" stroke-width="5" stroke-linejoin="round"/>
+  <ellipse cx="130" cy="139" rx="10" ry="9" fill="#FF6B6B" stroke="#2F4858" stroke-width="5"/>
+
+  <!-- Leaf-Green Scarf / Collar -->
+  <path d="M72 152 Q130 174 188 152 Q184 170 130 184 Q76 170 72 152 Z" fill="#6BCB77" stroke="#2F4858" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Star Charm on Belly -->
+  <polygon points="130,186 135,196 146,198 138,205 140,216 130,210 120,216 122,205 114,198 125,196" fill="#FFD166" stroke="#2F4858" stroke-width="4" stroke-linejoin="round"/>
+</svg>

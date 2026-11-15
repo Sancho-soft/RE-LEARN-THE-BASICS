@@ -1,0 +1,294 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/menu/main_menu.gd" id="2_menu_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="4_coin"]
+[ext_resource type="Texture2D" path="res://assets/ui/star.svg" id="5_star"]
+[ext_resource type="Texture2D" path="res://assets/art/mascot.svg" id="6_mascot"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="7_juicy"]
+[ext_resource type="Texture2D" path="res://assets/art/title_logo.png" id="8_title_logo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_normal"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(0.419608, 0.796078, 0.466667, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_hover"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(0.51, 0.86, 0.55, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_pressed"]
+content_margin_left = 24.0
+content_margin_top = 17.0
+content_margin_right = 24.0
+content_margin_bottom = 13.0
+bg_color = Color(0.35, 0.72, 0.4, 1)
+border_width_left = 4
+border_width_top = 6
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quit_normal"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(1, 0.419608, 0.419608, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quit_hover"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(1, 0.54, 0.54, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quit_pressed"]
+content_margin_left = 24.0
+content_margin_top = 17.0
+content_margin_right = 24.0
+content_margin_bottom = 13.0
+bg_color = Color(0.88, 0.35, 0.35, 1)
+border_width_left = 4
+border_width_top = 6
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_menu_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 56
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 56
+theme_override_constants/margin_bottom = 24
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ContentRow" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 56
+alignment = 1
+
+[node name="MascotColumn" type="VBoxContainer" parent="MarginContainer/CenterContainer/ContentRow"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow/CoinsBox"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+texture = ExtResource("4_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsLabel" type="Label" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow/CoinsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "0"
+
+[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StarIcon" type="TextureRect" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow/StarsBox"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+texture = ExtResource("5_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StarsLabel" type="Label" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow/StarsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "0"
+
+[node name="BadgeIcon" type="TextureRect" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(38, 38)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MascotCard" type="PanelContainer" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/MascotCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="MascotTexture" type="TextureRect" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/MascotCard/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 240)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("6_mascot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GreetingLabel" type="Label" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/MascotCard/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 62)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Hi! Ready to play
+with numbers?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="MenuPanel" type="PanelContainer" parent="MarginContainer/CenterContainer/ContentRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="MenuButtons" type="VBoxContainer" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MenuHeader" type="TextureRect" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+custom_minimum_size = Vector2(320, 126)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("8_title_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Spacer" type="Control" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_juicy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "PLAY"
+
+[node name="ActivitiesButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_juicy")
+text = "ACTIVITIES"
+
+[node name="ProgressButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_juicy")
+text = "PROGRESS"
+
+[node name="SettingsButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_juicy")
+text = "SETTINGS"
+
+[node name="AboutButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_juicy")
+text = "ABOUT"
+
+[node name="QuitButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("7_juicy")
+press_sfx = &"back"
+theme_override_colors/font_color = Color(1, 0.972549, 0.905882, 1)
+theme_override_colors/font_focus_color = Color(0.184314, 0.282353, 0.345098, 1)
+theme_override_colors/font_hover_color = Color(1, 0.972549, 0.905882, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.972549, 0.905882, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_quit_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_quit_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_quit_pressed")
+text = "QUIT"

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Bunny Ears -->
+  <ellipse cx="64" cy="48" rx="16" ry="38" transform="rotate(-10 64 48)" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+  <ellipse cx="64" cy="50" rx="8" ry="22" transform="rotate(-10 64 50)" fill="#FF6B6B" opacity="0.55"/>
+  <ellipse cx="116" cy="48" rx="16" ry="38" transform="rotate(10 116 48)" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+  <ellipse cx="116" cy="50" rx="8" ry="22" transform="rotate(10 116 50)" fill="#FF6B6B" opacity="0.55"/>
+  <!-- Shoulders (Leaf Green Shirt) -->
+  <path d="M40 166 C44 134, 136 134, 140 166 Z" fill="#6BCB77" stroke="#2F4858" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Head -->
+  <ellipse cx="90" cy="108" rx="48" ry="42" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+  <!-- Eyes -->
+  <circle cx="72" cy="104" r="6" fill="#2F4858"/>
+  <circle cx="70" cy="101" r="2" fill="#FFF8E7"/>
+  <circle cx="108" cy="104" r="6" fill="#2F4858"/>
+  <circle cx="106" cy="101" r="2" fill="#FFF8E7"/>
+  <!-- Cheeks -->
+  <ellipse cx="56" cy="116" rx="8" ry="5" fill="#FF6B6B" opacity="0.55"/>
+  <ellipse cx="124" cy="116" rx="8" ry="5" fill="#FF6B6B" opacity="0.55"/>
+  <!-- Nose + Smile -->
+  <polygon points="86,113 94,113 90,118" fill="#FF6B6B" stroke="#2F4858" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M82 124 Q90 130 98 124" fill="none" stroke="#2F4858" stroke-width="4" stroke-linecap="round"/>
+</svg>

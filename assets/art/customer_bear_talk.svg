@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Bear Ears -->
+  <circle cx="50" cy="64" r="18" fill="#FFD166" stroke="#2F4858" stroke-width="6"/>
+  <circle cx="50" cy="64" r="9" fill="#FFF8E7"/>
+  <circle cx="130" cy="64" r="18" fill="#FFD166" stroke="#2F4858" stroke-width="6"/>
+  <circle cx="130" cy="64" r="9" fill="#FFF8E7"/>
+  <!-- Shoulders -->
+  <path d="M40 166 C44 134, 136 134, 140 166 Z" fill="#219EBC" stroke="#2F4858" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Head -->
+  <ellipse cx="90" cy="108" rx="48" ry="44" fill="#FFD166" stroke="#2F4858" stroke-width="6"/>
+  <!-- Muzzle -->
+  <ellipse cx="90" cy="120" rx="22" ry="17" fill="#FFF8E7" stroke="#2F4858" stroke-width="4"/>
+  <!-- Eyes -->
+  <circle cx="71" cy="99" r="6" fill="#2F4858"/>
+  <circle cx="69" cy="96" r="2.2" fill="#FFF8E7"/>
+  <circle cx="109" cy="99" r="6" fill="#2F4858"/>
+  <circle cx="107" cy="96" r="2.2" fill="#FFF8E7"/>
+  <!-- Nose + Open Speaking Mouth -->
+  <ellipse cx="90" cy="113" rx="6" ry="4" fill="#2F4858"/>
+  <ellipse cx="90" cy="127" rx="8.5" ry="7.5" fill="#FF6B6B" stroke="#2F4858" stroke-width="4"/>
+</svg>

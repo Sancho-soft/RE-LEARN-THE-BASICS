@@ -1,0 +1,494 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/activities/activities_screen.gd" id="2_act_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+[ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="5_coin"]
+[ext_resource type="Texture2D" path="res://assets/ui/star.svg" id="6_star"]
+[ext_resource type="Texture2D" path="res://assets/art/items/apple.svg" id="7_apple"]
+[ext_resource type="Texture2D" path="res://assets/ui/star_empty.svg" id="8_star_empty"]
+[ext_resource type="Texture2D" path="res://assets/art/door_closed.svg" id="9_door"]
+[ext_resource type="Texture2D" path="res://assets/art/block_brick.svg" id="10_brick"]
+[ext_resource type="Texture2D" path="res://assets/art/treat_cookie.svg" id="11_cookie"]
+[ext_resource type="Texture2D" path="res://assets/art/activities_banner.png" id="12_activities_banner"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_normal"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 14.0
+bg_color = Color(0.419608, 0.796078, 0.466667, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_hover"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 14.0
+bg_color = Color(0.51, 0.86, 0.55, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_pressed"]
+content_margin_left = 24.0
+content_margin_top = 15.0
+content_margin_right = 24.0
+content_margin_bottom = 11.0
+bg_color = Color(0.35, 0.72, 0.4, 1)
+border_width_left = 4
+border_width_top = 6
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_focus"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 14.0
+bg_color = Color(1, 0.87, 0.45, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[node name="ActivitiesScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_act_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 42
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 42
+theme_override_constants/margin_bottom = 32
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "← Menu"
+script = ExtResource("4_juicy")
+press_sfx = &"back"
+
+[node name="TitleBanner" type="TextureRect" parent="MarginContainer/MainVBox/TopBar"]
+custom_minimum_size = Vector2(360, 82)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("12_activities_banner")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+
+[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("5_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0"
+
+[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StarIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("6_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StarsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0"
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Grid" type="GridContainer" parent="MarginContainer/MainVBox/CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 22
+columns = 2
+
+[node name="ShopCard" type="PanelContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid"]
+custom_minimum_size = Vector2(540, 240)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("7_apple")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleCol" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow/TitleCol"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "1. The Little Shop"
+
+[node name="ShopTierLabel" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow/TitleCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 18
+text = "Level 1: Sums to 10"
+
+[node name="ShopStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow/ShopStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow/ShopStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox/HeaderRow/ShopStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+text = "Add ₱ prices & give friendly customers their change!"
+autowrap_mode = 2
+
+[node name="PlayShopButton" type="Button" parent="MarginContainer/MainVBox/CenterContainer/Grid/ShopCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_play_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "PLAY"
+script = ExtResource("4_juicy")
+
+[node name="DoorsCard" type="PanelContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid"]
+custom_minimum_size = Vector2(540, 240)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("9_door")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleCol" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow/TitleCol"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "2. Puzzle Doors"
+
+[node name="DoorsTierLabel" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow/TitleCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 18
+text = "Level 1: Equal Groups"
+
+[node name="DoorsStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow/DoorsStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow/DoorsStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox/HeaderRow/DoorsStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+text = "Multiply gems & solve order-of-operations locks!"
+autowrap_mode = 2
+
+[node name="PlayDoorsButton" type="Button" parent="MarginContainer/MainVBox/CenterContainer/Grid/DoorsCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_play_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "PLAY"
+script = ExtResource("4_juicy")
+
+[node name="BuilderCard" type="PanelContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid"]
+custom_minimum_size = Vector2(540, 240)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("10_brick")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleCol" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow/TitleCol"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "3. Little Builder"
+
+[node name="BuilderTierLabel" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow/TitleCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 18
+text = "Level 1: Stacking Bricks"
+
+[node name="BuilderStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow/BuilderStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow/BuilderStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox/HeaderRow/BuilderStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+text = "Count blocks, area rows, fences & workshop sales (%)!"
+autowrap_mode = 2
+
+[node name="PlayBuilderButton" type="Button" parent="MarginContainer/MainVBox/CenterContainer/Grid/BuilderCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_play_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "PLAY"
+script = ExtResource("4_juicy")
+
+[node name="SharingCard" type="PanelContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid"]
+custom_minimum_size = Vector2(540, 240)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("11_cookie")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleCol" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow/TitleCol"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "4. Fair Sharing"
+
+[node name="SharingTierLabel" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow/TitleCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 18
+text = "Level 1: Equal Sharing"
+
+[node name="SharingStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow/SharingStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow/SharingStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox/HeaderRow/SharingStarsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 20
+text = "Divide snacks, explore fractions & match ratios!"
+autowrap_mode = 2
+
+[node name="PlaySharingButton" type="Button" parent="MarginContainer/MainVBox/CenterContainer/Grid/SharingCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_play_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "PLAY"
+script = ExtResource("4_juicy")

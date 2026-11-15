@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 56" width="800" height="56" preserveAspectRatio="none">
+  <!-- Cozy striped shop awning scallops -->
+  <g stroke="#2F4858" stroke-width="5" stroke-linejoin="round">
+    <path d="M4 4 H104 V34 Q54 54 4 34 Z" fill="#FF6B6B"/>
+    <path d="M104 4 H204 V34 Q154 54 104 34 Z" fill="#FFF8E7"/>
+    <path d="M204 4 H304 V34 Q254 54 204 34 Z" fill="#FF6B6B"/>
+    <path d="M304 4 H404 V34 Q354 54 304 34 Z" fill="#FFF8E7"/>
+    <path d="M404 4 H504 V34 Q454 54 404 34 Z" fill="#FF6B6B"/>
+    <path d="M504 4 H604 V34 Q554 54 504 34 Z" fill="#FFF8E7"/>
+    <path d="M604 4 H704 V34 Q654 54 604 34 Z" fill="#FF6B6B"/>
+    <path d="M704 4 H796 V34 Q750 54 704 34 Z" fill="#FFF8E7"/>
+  </g>
+</svg>

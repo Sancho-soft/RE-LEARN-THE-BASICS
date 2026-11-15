@@ -1,0 +1,232 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/components/number_pad.gd" id="2_pad_gd"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="3_juicy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_display"]
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+bg_color = Color(0.745098, 0.898039, 0.960784, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_clear"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 14.0
+bg_color = Color(1, 0.819608, 0.4, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 7
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_submit_normal"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.419608, 0.796078, 0.466667, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_submit_hover"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.51, 0.86, 0.55, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_submit_pressed"]
+content_margin_left = 20.0
+content_margin_top = 17.0
+content_margin_right = 20.0
+content_margin_bottom = 13.0
+bg_color = Color(0.35, 0.72, 0.4, 1)
+border_width_left = 4
+border_width_top = 6
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_submit_disabled"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+bg_color = Color(0.84, 0.88, 0.85, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.45, 0.52, 0.56, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="NumberPad" type="PanelContainer"]
+custom_minimum_size = Vector2(310, 0)
+theme = ExtResource("1_theme")
+script = ExtResource("2_pad_gd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="DisplayBox" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_display")
+
+[node name="DisplayLabel" type="Label" parent="VBoxContainer/DisplayBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "₱  __"
+horizontal_alignment = 1
+
+[node name="DigitsGrid" type="GridContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3
+
+[node name="Btn1" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+script = ExtResource("3_juicy")
+
+[node name="Btn2" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "2"
+script = ExtResource("3_juicy")
+
+[node name="Btn3" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "3"
+script = ExtResource("3_juicy")
+
+[node name="Btn4" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "4"
+script = ExtResource("3_juicy")
+
+[node name="Btn5" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "5"
+script = ExtResource("3_juicy")
+
+[node name="Btn6" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "6"
+script = ExtResource("3_juicy")
+
+[node name="Btn7" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "7"
+script = ExtResource("3_juicy")
+
+[node name="Btn8" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "8"
+script = ExtResource("3_juicy")
+
+[node name="Btn9" type="Button" parent="VBoxContainer/DigitsGrid"]
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "9"
+script = ExtResource("3_juicy")
+
+[node name="ClearButton" type="Button" parent="VBoxContainer/DigitsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_clear")
+text = "C"
+script = ExtResource("3_juicy")
+press_sfx = &"back"
+
+[node name="ZeroButton" type="Button" parent="VBoxContainer/DigitsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+script = ExtResource("3_juicy")
+
+[node name="BackspaceButton" type="Button" parent="VBoxContainer/DigitsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(78, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_clear")
+text = "⌫"
+script = ExtResource("3_juicy")
+press_sfx = &"back"
+
+[node name="SubmitButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+theme_override_styles/disabled = SubResource("StyleBoxFlat_submit_disabled")
+theme_override_styles/hover = SubResource("StyleBoxFlat_submit_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_submit_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_submit_pressed")
+text = "CHECK!"
+script = ExtResource("3_juicy")

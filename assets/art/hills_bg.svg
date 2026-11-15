@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 220" width="1280" height="220" preserveAspectRatio="none">
+  <!-- Back softer teal-green hill -->
+  <path d="M0 130 Q260 40 560 110 T1120 85 Q1210 75 1280 105 L1280 220 L0 220 Z" fill="#8CD790" stroke="#2F4858" stroke-width="6"/>
+  <!-- Front leaf-green hill -->
+  <path d="M0 160 Q320 90 680 150 T1280 125 L1280 220 L0 220 Z" fill="#6BCB77" stroke="#2F4858" stroke-width="6"/>
+  <!-- Subtle cream highlight ridge -->
+  <path d="M40 166 Q320 104 670 156" fill="none" stroke="#FFF8E7" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
+</svg>

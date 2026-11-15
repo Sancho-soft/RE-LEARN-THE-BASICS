@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <!-- Soft Outer Rays -->
+  <g stroke="#2F4858" stroke-width="6" stroke-linecap="round" fill="#FFD166">
+    <rect x="74" y="8" width="12" height="22" rx="6"/>
+    <rect x="74" y="130" width="12" height="22" rx="6"/>
+    <rect x="8" y="74" width="22" height="12" rx="6"/>
+    <rect x="130" y="74" width="22" height="12" rx="6"/>
+    <rect x="74" y="8" width="12" height="22" rx="6" transform="rotate(45 80 80)"/>
+    <rect x="74" y="8" width="12" height="22" rx="6" transform="rotate(135 80 80)"/>
+    <rect x="74" y="8" width="12" height="22" rx="6" transform="rotate(225 80 80)"/>
+    <rect x="74" y="8" width="12" height="22" rx="6" transform="rotate(315 80 80)"/>
+  </g>
+  <!-- Sun Disc -->
+  <circle cx="80" cy="80" r="40" fill="#FFD166" stroke="#2F4858" stroke-width="7"/>
+  <!-- Highlight Arc -->
+  <path d="M56 64 C62 54, 72 50, 82 50" fill="none" stroke="#FFF8E7" stroke-width="5" stroke-linecap="round"/>
+</svg>

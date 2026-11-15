@@ -1,0 +1,154 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/menu/progress_screen.gd" id="2_prog_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+[ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="5_coin"]
+[ext_resource type="Texture2D" path="res://assets/ui/star.svg" id="6_star"]
+
+[node name="ProgressScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_prog_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "← Menu"
+script = ExtResource("4_juicy")
+press_sfx = &"back"
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 34
+text = "PROGRESS & STICKER SHOP"
+horizontal_alignment = 1
+
+[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+
+[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("5_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0"
+
+[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StarIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("6_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StarsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0 / 12"
+
+[node name="ContentRow" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="MasteryPanel" type="PanelContainer" parent="MarginContainer/MainVBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentRow/MasteryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="Label" parent="MarginContainer/MainVBox/ContentRow/MasteryPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "My Math Journey"
+
+[node name="SolvedLabel" type="Label" parent="MarginContainer/MainVBox/ContentRow/MasteryPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 22
+text = "Questions Solved: 0"
+
+[node name="MasteryList" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentRow/MasteryPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="StickerPanel" type="PanelContainer" parent="MarginContainer/MainVBox/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentRow/StickerPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="Label" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Sticker Shop"
+
+[node name="Subtitle" type="Label" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+text = "Spend coins to unlock stickers & pin one next to Pip!"
+
+[node name="StickerGrid" type="GridContainer" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+columns = 3

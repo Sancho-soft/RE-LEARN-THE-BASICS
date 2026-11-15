@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Bunny Ears -->
+  <ellipse cx="62" cy="46" rx="16" ry="38" transform="rotate(-14 62 46)" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+  <ellipse cx="62" cy="48" rx="8" ry="22" transform="rotate(-14 62 48)" fill="#FF6B6B" opacity="0.55"/>
+  <ellipse cx="118" cy="46" rx="16" ry="38" transform="rotate(14 118 46)" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+  <ellipse cx="118" cy="48" rx="8" ry="22" transform="rotate(14 118 48)" fill="#FF6B6B" opacity="0.55"/>
+  <!-- Shoulders -->
+  <path d="M40 166 C44 134, 136 134, 140 166 Z" fill="#6BCB77" stroke="#2F4858" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Head -->
+  <ellipse cx="90" cy="108" rx="48" ry="42" fill="#FFF8E7" stroke="#2F4858" stroke-width="6"/>
+  <!-- Eyes -->
+  <circle cx="72" cy="103" r="6" fill="#2F4858"/>
+  <circle cx="70" cy="100" r="2.2" fill="#FFF8E7"/>
+  <circle cx="108" cy="103" r="6" fill="#2F4858"/>
+  <circle cx="106" cy="100" r="2.2" fill="#FFF8E7"/>
+  <!-- Cheeks -->
+  <ellipse cx="56" cy="116" rx="8.5" ry="5.5" fill="#FF6B6B" opacity="0.62"/>
+  <ellipse cx="124" cy="116" rx="8.5" ry="5.5" fill="#FF6B6B" opacity="0.62"/>
+  <!-- Nose + Open Speaking Mouth -->
+  <polygon points="86,112 94,112 90,117" fill="#FF6B6B" stroke="#2F4858" stroke-width="3" stroke-linejoin="round"/>
+  <ellipse cx="90" cy="128" rx="9" ry="8" fill="#FF6B6B" stroke="#2F4858" stroke-width="4"/>
+</svg>
