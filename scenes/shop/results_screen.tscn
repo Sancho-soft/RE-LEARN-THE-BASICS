@@ -1,0 +1,209 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/shop/results_screen.gd" id="2_res_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Texture2D" path="res://assets/art/mascot.svg" id="4_mascot"]
+[ext_resource type="Texture2D" path="res://assets/ui/star_empty.svg" id="5_star_empty"]
+[ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="6_coin"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="7_juicy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_normal"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(0.419608, 0.796078, 0.466667, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_hover"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(0.51, 0.86, 0.55, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_pressed"]
+content_margin_left = 24.0
+content_margin_top = 17.0
+content_margin_right = 24.0
+content_margin_bottom = 13.0
+bg_color = Color(0.35, 0.72, 0.4, 1)
+border_width_left = 4
+border_width_top = 6
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="ResultsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_res_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Card"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="TopRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="MascotTexture" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/TopRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 145)
+layout_mode = 2
+texture = ExtResource("4_mascot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxContainer/TopRow"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Card/VBoxContainer/TopRow/TitleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "SHIFT COMPLETE!"
+horizontal_alignment = 1
+
+[node name="MascotSpeechLabel" type="Label" parent="CenterContainer/Card/VBoxContainer/TopRow/TitleBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2863, 0.3961, 0.4549, 1)
+theme_override_font_sizes/font_size = 20
+text = "Pip is cheering for you!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StarsRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Star1" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/StarsRow"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+texture = ExtResource("5_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/StarsRow"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+texture = ExtResource("5_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/StarsRow"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+texture = ExtResource("5_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="CoinIcon" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/CoinsRow"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("6_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsEarnedLabel" type="Label" parent="CenterContainer/Card/VBoxContainer/CoinsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "+40 Coins Earned!"
+
+[node name="DetailLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 22
+text = "Solved 8 / 8 smoothly  •  Level 1: Sums to 10"
+horizontal_alignment = 1
+
+[node name="TotalsLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Total Saved:  40 Coins   |   3 Stars"
+horizontal_alignment = 1
+
+[node name="ButtonsRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="PlayAgainButton" type="Button" parent="CenterContainer/Card/VBoxContainer/ButtonsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "Play Again"
+script = ExtResource("7_juicy")
+
+[node name="ActivitiesButton" type="Button" parent="CenterContainer/Card/VBoxContainer/ButtonsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Activities"
+script = ExtResource("7_juicy")
+
+[node name="MenuButton" type="Button" parent="CenterContainer/Card/VBoxContainer/ButtonsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Main Menu"
+script = ExtResource("7_juicy")
+press_sfx = &"back"

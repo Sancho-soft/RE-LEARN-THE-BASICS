@@ -1,0 +1,63 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/menu/sub_screen_placeholder.gd" id="2_sub_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+
+[node name="ActivitiesPlaceholder" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_sub_gd")
+screen_title = "ACTIVITIES"
+screen_description = "Activity 1: The Little Shop (Addition & Subtraction with ₱)
+will be built here in Phase 2!"
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Card"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "ACTIVITIES"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Activity 1: The Little Shop (Addition & Subtraction with ₱)
+will be built here in Phase 2!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BackButton" type="Button" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back to Menu"
+script = ExtResource("4_juicy")
+press_sfx = &"back"

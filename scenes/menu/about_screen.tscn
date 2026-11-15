@@ -1,0 +1,134 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/menu/about_screen.gd" id="2_about_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+[ext_resource type="Texture2D" path="res://assets/art/mascot.svg" id="5_mascot"]
+[ext_resource type="Texture2D" path="res://assets/art/title_logo.png" id="6_title_logo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_creators"]
+content_margin_left = 24.0
+content_margin_top = 16.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(0.94, 0.97, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="AboutScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_about_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="CenterContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Card"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="HeaderRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="MascotTexture" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/HeaderRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(104, 108)
+layout_mode = 2
+texture = ExtResource("5_mascot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLogo" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/HeaderRow"]
+custom_minimum_size = Vector2(340, 135)
+layout_mode = 2
+texture = ExtResource("6_title_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AboutHeading" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ABOUT"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+custom_minimum_size = Vector2(580, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 21
+text = "A cozy, gentle math adventure designed for young learners to practice numbers at their own pace."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CreatorsPanel" type="PanelContainer" parent="CenterContainer/Card/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_creators")
+
+[node name="CreatorsVBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="CreatorsHeader" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreatorsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2863, 0.3961, 0.4549, 1)
+theme_override_font_sizes/font_size = 22
+text = "CREATORS"
+horizontal_alignment = 1
+
+[node name="Creator1" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreatorsVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "TOM ARIZOBAL"
+horizontal_alignment = 1
+
+[node name="Creator2" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreatorsVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "ALDREN LOUIE REYES"
+horizontal_alignment = 1
+
+[node name="SpeechLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2863, 0.3961, 0.4549, 1)
+theme_override_font_sizes/font_size = 20
+text = "Thank you for playing Re-Learn The Basics!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BackButton" type="Button" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back to Menu"
+script = ExtResource("4_juicy")
+press_sfx = &"back"

@@ -1,0 +1,376 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/shop/little_shop.gd" id="2_shop_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+[ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="5_coin"]
+[ext_resource type="Texture2D" path="res://assets/art/customer_bunny.svg" id="6_bunny"]
+[ext_resource type="Texture2D" path="res://assets/art/items/apple.svg" id="7_apple"]
+[ext_resource type="Texture2D" path="res://assets/art/items/juice.svg" id="8_juice"]
+[ext_resource type="Texture2D" path="res://assets/ui/hint_bulb.svg" id="9_bulb"]
+[ext_resource type="PackedScene" path="res://scenes/components/number_pad.tscn" id="10_numpad"]
+[ext_resource type="Texture2D" path="res://assets/art/shop_awning.svg" id="11_awning"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tag"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 0.819608, 0.4, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_item_card"]
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+bg_color = Color(0.95, 0.98, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_op_badge"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.419608, 0.796078, 0.466667, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hint_btn"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+bg_color = Color(1, 0.87, 0.45, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 7
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_feedback"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 7
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="LittleShop" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_shop_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 26
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MenuButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "← Menu"
+script = ExtResource("4_juicy")
+press_sfx = &"back"
+
+[node name="ProgressCard" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ProgressRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/ProgressCard"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Customer 1 / 8"
+
+[node name="Dot" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "•"
+
+[node name="TierLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 24
+text = "Level 1: Sums to 10"
+
+[node name="CoinsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CoinsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/CoinsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/CoinsPanel/CoinsRow"]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+texture = ExtResource("5_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SessionCoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/CoinsPanel/CoinsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "+0"
+
+[node name="BodyRow" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="ShopStage" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="CustomerCard" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CustomerRow" type="HBoxContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CustomerCard"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="CustomerIcon" type="TextureRect" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CustomerCard/CustomerRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture = ExtResource("6_bunny")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SpeechBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CustomerCard/CustomerRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="CustomerTag" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CustomerCard/CustomerRow/SpeechBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 20
+text = "CUSTOMER REQUEST"
+
+[node name="SpeechLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CustomerCard/CustomerRow/SpeechBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "May I buy an Apple and a Juice, please?"
+autowrap_mode = 2
+
+[node name="CounterCard" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CounterVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="AwningBanner" type="TextureRect" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+texture = ExtResource("11_awning")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="ItemsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="LeftItem" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_item_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/LeftItem"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="LeftIcon" type="TextureRect" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/LeftItem/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("7_apple")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LeftName" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/LeftItem/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Apple"
+horizontal_alignment = 1
+
+[node name="PricePill" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/LeftItem/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_tag")
+
+[node name="LeftPrice" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/LeftItem/VBox/PricePill"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "₱4"
+horizontal_alignment = 1
+
+[node name="OperatorBadge" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_op_badge")
+
+[node name="OperatorLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/OperatorBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "+"
+horizontal_alignment = 1
+
+[node name="RightItem" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_item_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/RightItem"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="RightIcon" type="TextureRect" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/RightItem/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(84, 84)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("8_juice")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RightName" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/RightItem/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Juice"
+horizontal_alignment = 1
+
+[node name="PricePill" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/RightItem/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_tag")
+
+[node name="RightPrice" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox/ItemsRow/RightItem/VBox/PricePill"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "₱3"
+horizontal_alignment = 1
+
+[node name="ExpressionLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/CounterCard/CounterVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "₱4  +  ₱3  =  ?"
+horizontal_alignment = 1
+
+[node name="FeedbackRow" type="HBoxContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="FeedbackPanel" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/ShopStage/FeedbackRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_feedback")
+
+[node name="FeedbackLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/ShopStage/FeedbackRow/FeedbackPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Use the number pad and press CHECK!"
+autowrap_mode = 2
+
+[node name="HintButton" type="Button" parent="MarginContainer/MainVBox/BodyRow/ShopStage/FeedbackRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_hint_btn")
+text = "Hint"
+icon = ExtResource("9_bulb")
+expand_icon = true
+script = ExtResource("4_juicy")
+press_sfx = &"hint"
+
+[node name="NumberPad" parent="MarginContainer/MainVBox/BodyRow" instance=ExtResource("10_numpad")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
