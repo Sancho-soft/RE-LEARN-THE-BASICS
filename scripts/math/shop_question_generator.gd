@@ -1,5 +1,5 @@
 # res://scripts/math/shop_question_generator.gd
-# Generates addition & subtraction shop questions across a 4-tier difficulty ladder.
+# Generates addition & subtraction shop questions across an 8-tier difficulty ladder.
 class_name ShopQuestionGenerator
 extends RefCounted
 
@@ -17,15 +17,19 @@ const TIER_NAMES: Dictionary = {
 	2: "Level 2: Sums to 20",
 	3: "Level 3: Making Change",
 	4: "Level 4: Big Shop (to 100)",
+	5: "Level 5: Super Shop (to 250)",
+	6: "Level 6: Grand Market (to 500)",
+	7: "Level 7: Mega Mall (to 750)",
+	8: "Level 8: Master Cashier (to 999)",
 }
 
 
 static func get_tier_label(tier: int) -> String:
-	return str(TIER_NAMES.get(clampi(tier, 1, 4), "Level 1"))
+	return str(TIER_NAMES.get(clampi(tier, 1, GameState.MAX_ACTIVITY_TIER), "Level 1"))
 
 
 static func generate(tier: int) -> MathQuestion:
-	var clamped_tier: int = clampi(tier, 1, 4)
+	var clamped_tier: int = clampi(tier, 1, GameState.MAX_ACTIVITY_TIER)
 	match clamped_tier:
 		1:
 			return _gen_addition_to_10()
@@ -39,6 +43,22 @@ static func generate(tier: int) -> MathQuestion:
 			if randi() % 2 == 0:
 				return _gen_addition_to_100()
 			return _gen_subtraction_change(100)
+		5:
+			if randi() % 2 == 0:
+				return _gen_addition_range(5, 45, 135, 35, 250)
+			return _gen_subtraction_budgets(5, [150, 200, 250], 25, 15)
+		6:
+			if randi() % 2 == 0:
+				return _gen_addition_range(6, 120, 290, 80, 500)
+			return _gen_subtraction_budgets(6, [300, 400, 500], 65, 25)
+		7:
+			if randi() % 2 == 0:
+				return _gen_addition_range(7, 210, 450, 140, 750)
+			return _gen_subtraction_budgets(7, [600, 700, 750], 120, 40)
+		8:
+			if randi() % 2 == 0:
+				return _gen_addition_range(8, 320, 620, 180, 999)
+			return _gen_subtraction_budgets(8, [800, 900, 950, 999], 215, 55)
 	return _gen_addition_to_10()
 
 
@@ -164,4 +184,56 @@ static func _gen_subtraction_change(max_paid: int) -> MathQuestion:
 		q.hint_text = "Tip: Think %d take away %d — try counting up from %d to %d (about %d tens)." % [
 			paid, price, price, paid, maxi(1, tens_diff / 10)
 		]
+	return q
+
+
+static func _gen_addition_range(tier_num: int, min_a: int, max_a: int, min_b: int, max_total: int) -> MathQuestion:
+	var pair: Array[Dictionary] = _pick_two_items()
+	var a: int = randi_range(min_a, max_a)
+	var b: int = randi_range(min_b, maxi(min_b, max_total - a))
+
+	var q: MathQuestion = MathQuestion.new()
+	q.operation = "add"
+	q.tier = tier_num
+	q.left_label = str(pair[0]["name"])
+	q.left_price = a
+	q.left_icon_path = str(pair[0]["icon"])
+	q.right_label = str(pair[1]["name"])
+	q.right_price = b
+	q.right_icon_path = str(pair[1]["icon"])
+	q.correct_answer = a + b
+	q.prompt = "A big order of %s and %s! What is the total?" % [q.left_label, q.right_label]
+	q.expression_text = "₱%d  +  ₱%d  =  ?" % [a, b]
+
+	var h_a: int = (a / 100) * 100
+	var h_b: int = (b / 100) * 100
+	q.hint_text = "Tip: Add the hundreds first (%d + %d = %d), then add the remaining %d + %d!" % [
+		h_a, h_b, h_a + h_b, a % 100, b % 100
+	]
+	return q
+
+
+static func _gen_subtraction_budgets(tier_num: int, budgets: Array[int], min_price: int, min_change: int) -> MathQuestion:
+	var pair: Array[Dictionary] = _pick_two_items()
+	var paid: int = budgets[randi() % budgets.size()]
+	var price: int = randi_range(min_price, maxi(min_price, paid - min_change))
+
+	var q: MathQuestion = MathQuestion.new()
+	q.operation = "sub"
+	q.tier = tier_num
+	q.paid_amount = paid
+	q.left_label = str(pair[0]["name"])
+	q.left_price = price
+	q.left_icon_path = str(pair[0]["icon"])
+	q.correct_answer = paid - price
+	q.prompt = "Here is ₱%d for the %s (₱%d). What's my change?" % [paid, q.left_label, price]
+	q.expression_text = "₱%d  -  ₱%d  =  ?" % [paid, price]
+
+	var next_hundred: int = ((price / 100) + 1) * 100
+	if next_hundred < paid:
+		q.hint_text = "Tip: Count up from %d to %d (+%d), then up to %d!" % [
+			price, next_hundred, next_hundred - price, paid
+		]
+	else:
+		q.hint_text = "Tip: Start at %d and count up to %d!" % [price, paid]
 	return q

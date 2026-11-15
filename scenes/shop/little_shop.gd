@@ -59,7 +59,7 @@ var _bob_time: float = 0.0
 
 
 func _ready() -> void:
-	_current_tier = clampi(GameState.shop_tier, 1, 4)
+	_current_tier = clampi(GameState.shop_tier, 1, GameState.MAX_ACTIVITY_TIER)
 	_talker = TalkingAvatar.new()
 	add_child(_talker)
 	_talker.setup(_customer_icon, _speech_label, CUSTOMERS[0], CUSTOMER_TALK[0])
@@ -177,7 +177,7 @@ func _handle_correct_answer() -> void:
 			_miss_streak = 0
 
 	var level_note: String = ""
-	if _correct_streak >= 2 and _current_tier < 4:
+	if _correct_streak >= 2 and _current_tier < GameState.MAX_ACTIVITY_TIER:
 		_current_tier += 1
 		_correct_streak = 0
 		level_note = " Level up!"

@@ -5,12 +5,16 @@
 extends Node
 
 const SAVE_PATH: String = "user://save_data.cfg"
+const MAX_ACTIVITY_TIER: int = 8
 const FADE_COLOR: Color = Color(0.184314, 0.282353, 0.345098, 1.0) # Dark teal #2F4858
 const FADE_DURATION: float = 0.18
 
 const BGM_PATH: String = "res://assets/audio/bgm_cozy.wav"
+const RARE_BGM_PATH: String = "res://scenes/menu/re-learn the basics main theme (Secret).mp3"
 const BGM_BASE_DB: float = -10.0
 const BGM_DUCK_DB: float = -16.0
+const BGM_SILENT_DB: float = -80.0
+const BGM_FADE_DURATION: float = 0.8
 
 const SFX_PATHS: Dictionary = {
 	&"hover": "res://assets/audio/ui_hover.wav",
@@ -54,12 +58,20 @@ var activity_stars: Dictionary = {
 	"puzzle_doors": 0,
 	"little_builder": 0,
 	"fair_sharing": 0,
+	"number_patterns": 0,
+	"clock_time": 0,
+	"rocket_shapes": 0,
+	"coin_jar": 0,
 }
 var activity_tiers: Dictionary = {
 	"little_shop": 1,
 	"puzzle_doors": 1,
 	"little_builder": 1,
 	"fair_sharing": 1,
+	"number_patterns": 1,
+	"clock_time": 1,
+	"rocket_shapes": 1,
+	"coin_jar": 1,
 }
 var shop_tier: int:
 	get:
@@ -76,6 +88,7 @@ var last_run_summary: Dictionary = {}
 # --- Settings ---
 var sfx_enabled: bool = true
 var music_enabled: bool = true
+var bgm_volume_percent: int = 100
 var reduce_motion: bool = false
 var resolution_index: int = 0
 
@@ -85,6 +98,10 @@ var _is_transitioning: bool = false
 
 var _bgm_player: AudioStreamPlayer
 var _duck_tween: Tween
+var _bgm_fade_tween: Tween
+var _is_fading_bgm: bool = false
+var _is_rare_theme_active: bool = false
+var _rare_bgm_stream: AudioStream
 
 var _sfx_streams: Dictionary = {}
 var _sfx_players: Array[AudioStreamPlayer] = []
@@ -145,7 +162,7 @@ func is_transitioning() -> bool:
 func _setup_bgm() -> void:
 	_bgm_player = AudioStreamPlayer.new()
 	_bgm_player.bus = &"Master"
-	_bgm_player.volume_db = BGM_BASE_DB
+	_bgm_player.volume_db = _get_bgm_target_db()
 	add_child(_bgm_player)
 
 	if ResourceLoader.exists(BGM_PATH):
@@ -162,15 +179,91 @@ func _setup_bgm() -> void:
 		push_warning("GameState: Missing BGM at %s" % BGM_PATH)
 
 
+func _get_bgm_target_db() -> float:
+	if bgm_volume_percent <= 0:
+		return BGM_SILENT_DB
+	return maxf(BGM_BASE_DB + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB)
+
+
+func _get_bgm_duck_db() -> float:
+	if bgm_volume_percent <= 0:
+		return BGM_SILENT_DB
+	return maxf(BGM_DUCK_DB + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB)
+
+
 func _duck_bgm(hold_sec: float = 0.35) -> void:
-	if not music_enabled or not _bgm_player.playing:
+	if not music_enabled or not _bgm_player.playing or _is_fading_bgm:
 		return
 	if _duck_tween != null and _duck_tween.is_valid():
 		_duck_tween.kill()
 	_duck_tween = create_tween()
-	_duck_tween.tween_property(_bgm_player, "volume_db", BGM_DUCK_DB, 0.08)
+	_duck_tween.tween_property(_bgm_player, "volume_db", _get_bgm_duck_db(), 0.08)
 	_duck_tween.tween_interval(hold_sec)
-	_duck_tween.tween_property(_bgm_player, "volume_db", BGM_BASE_DB, 0.45)
+	_duck_tween.tween_property(_bgm_player, "volume_db", _get_bgm_target_db(), 0.45)
+
+
+func is_rare_theme_active() -> bool:
+	return _is_rare_theme_active
+
+
+func activate_rare_theme() -> bool:
+	if _is_rare_theme_active:
+		return false
+	var rare_stream: AudioStream = _load_rare_bgm()
+	if rare_stream == null:
+		push_warning("GameState: Missing rare BGM at %s" % RARE_BGM_PATH)
+		return false
+
+	# Session-only easter egg: intentionally not persisted so default BGM returns on next launch.
+	_is_rare_theme_active = true
+	if _duck_tween != null and _duck_tween.is_valid():
+		_duck_tween.kill()
+	if _bgm_fade_tween != null and _bgm_fade_tween.is_valid():
+		_bgm_fade_tween.kill()
+
+	if _bgm_player == null:
+		return true
+
+	if not music_enabled:
+		_bgm_player.stream = rare_stream
+		_bgm_player.volume_db = _get_bgm_target_db()
+		return true
+
+	var fade_time: float = BGM_FADE_DURATION * 0.4 if reduce_motion else BGM_FADE_DURATION
+	_is_fading_bgm = true
+	_bgm_fade_tween = create_tween()
+	if _bgm_player.playing:
+		_bgm_fade_tween.tween_property(_bgm_player, "volume_db", BGM_SILENT_DB, fade_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		_bgm_fade_tween.tween_callback(_switch_to_rare_bgm.bind(rare_stream))
+	else:
+		_switch_to_rare_bgm(rare_stream)
+	_bgm_fade_tween.tween_property(_bgm_player, "volume_db", _get_bgm_target_db(), fade_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_bgm_fade_tween.tween_callback(func() -> void: _is_fading_bgm = false)
+	return true
+
+
+func _load_rare_bgm() -> AudioStream:
+	if _rare_bgm_stream != null:
+		return _rare_bgm_stream
+	var stream: AudioStream = null
+	if ResourceLoader.exists(RARE_BGM_PATH):
+		stream = load(RARE_BGM_PATH) as AudioStream
+	if stream == null and FileAccess.file_exists(RARE_BGM_PATH):
+		stream = AudioStreamMP3.load_from_file(RARE_BGM_PATH)
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
+	_rare_bgm_stream = stream
+	return _rare_bgm_stream
+
+
+func _switch_to_rare_bgm(rare_stream: AudioStream) -> void:
+	if _bgm_player == null:
+		return
+	_bgm_player.stop()
+	_bgm_player.stream = rare_stream
+	_bgm_player.volume_db = BGM_SILENT_DB
+	if music_enabled:
+		_bgm_player.play()
 
 
 func _setup_sfx() -> void:
@@ -213,11 +306,32 @@ func set_sfx_enabled(enabled: bool) -> void:
 func set_music_enabled(enabled: bool) -> void:
 	music_enabled = enabled
 	if _bgm_player != null:
+		if _bgm_fade_tween != null and _bgm_fade_tween.is_valid():
+			_bgm_fade_tween.kill()
+		_is_fading_bgm = false
+		if _is_rare_theme_active:
+			var rare_stream: AudioStream = _load_rare_bgm()
+			if rare_stream != null and _bgm_player.stream != rare_stream:
+				_bgm_player.stop()
+				_bgm_player.stream = rare_stream
 		if music_enabled and _bgm_player.stream != null and not _bgm_player.playing:
-			_bgm_player.volume_db = BGM_BASE_DB
+			_bgm_player.volume_db = _get_bgm_target_db()
 			_bgm_player.play()
+		elif music_enabled and _bgm_player.playing:
+			_bgm_player.volume_db = _get_bgm_target_db()
 		elif not music_enabled and _bgm_player.playing:
 			_bgm_player.stop()
+			_bgm_player.volume_db = _get_bgm_target_db()
+	save_game()
+	settings_changed.emit()
+
+
+func set_bgm_volume_percent(percent: int) -> void:
+	bgm_volume_percent = clampi(percent, 0, 100)
+	if _bgm_player != null and not _is_fading_bgm:
+		if _duck_tween != null and _duck_tween.is_valid():
+			_duck_tween.kill()
+		_bgm_player.volume_db = _get_bgm_target_db()
 	save_game()
 	settings_changed.emit()
 
@@ -267,11 +381,35 @@ func _apply_display_settings() -> void:
 # ---------------------------------------------------------------- Progress & Stickers
 
 func get_activity_tier(activity_id: String) -> int:
-	return clampi(int(activity_tiers.get(activity_id, 1)), 1, 4)
+	return clampi(int(activity_tiers.get(activity_id, 1)), 1, MAX_ACTIVITY_TIER)
 
 
-func set_activity_tier(activity_id: String, tier: int) -> void:
-	activity_tiers[activity_id] = clampi(tier, 1, 4)
+func set_activity_tier(activity_id: String, tier: int, persist: bool = false) -> void:
+	activity_tiers[activity_id] = clampi(tier, 1, MAX_ACTIVITY_TIER)
+	if persist:
+		save_game()
+
+
+func get_activity_tier_label(activity_id: String, tier: int = -1) -> String:
+	var resolved_tier: int = get_activity_tier(activity_id) if tier < 1 else clampi(tier, 1, MAX_ACTIVITY_TIER)
+	match activity_id:
+		"little_shop":
+			return ShopQuestionGenerator.get_tier_label(resolved_tier)
+		"puzzle_doors":
+			return DoorsQuestionGenerator.get_tier_label(resolved_tier)
+		"little_builder":
+			return BuilderQuestionGenerator.get_tier_label(resolved_tier)
+		"fair_sharing":
+			return SharingQuestionGenerator.get_tier_label(resolved_tier)
+		"number_patterns":
+			return PatternsQuestionGenerator.get_tier_label(resolved_tier)
+		"clock_time":
+			return TimeQuestionGenerator.get_tier_label(resolved_tier)
+		"rocket_shapes":
+			return ShapesQuestionGenerator.get_tier_label(resolved_tier)
+		"coin_jar":
+			return CoinJarQuestionGenerator.get_tier_label(resolved_tier)
+	return "Level %d" % resolved_tier
 
 
 func add_rewards(earned_coins: int, earned_stars: int, activity_id: String = "", solved_count: int = 8) -> void:
@@ -340,6 +478,7 @@ func save_game() -> void:
 	config.set_value("progress", "equipped_sticker", equipped_sticker)
 	config.set_value("settings", "sfx_enabled", sfx_enabled)
 	config.set_value("settings", "music_enabled", music_enabled)
+	config.set_value("settings", "bgm_volume_percent", bgm_volume_percent)
 	config.set_value("settings", "reduce_motion", reduce_motion)
 	config.set_value("settings", "resolution_index", resolution_index)
 	var err: Error = config.save(SAVE_PATH)
@@ -363,7 +502,7 @@ func load_game() -> void:
 	if loaded_tiers is Dictionary:
 		activity_tiers.merge(loaded_tiers as Dictionary, true)
 	elif config.has_section_key("progress", "shop_tier"):
-		activity_tiers["little_shop"] = clampi(int(config.get_value("progress", "shop_tier", 1)), 1, 4)
+		activity_tiers["little_shop"] = clampi(int(config.get_value("progress", "shop_tier", 1)), 1, MAX_ACTIVITY_TIER)
 
 	var loaded_stickers: Variant = config.get_value("progress", "unlocked_stickers", [])
 	if loaded_stickers is Array:
@@ -374,6 +513,7 @@ func load_game() -> void:
 	equipped_sticker = str(config.get_value("progress", "equipped_sticker", ""))
 	sfx_enabled = bool(config.get_value("settings", "sfx_enabled", true))
 	music_enabled = bool(config.get_value("settings", "music_enabled", true))
+	bgm_volume_percent = clampi(int(config.get_value("settings", "bgm_volume_percent", 100)), 0, 100)
 	reduce_motion = bool(config.get_value("settings", "reduce_motion", false))
 	resolution_index = clampi(int(config.get_value("settings", "resolution_index", 0)), 0, RESOLUTION_PRESETS.size() - 1)
 	_recalculate_total_stars()

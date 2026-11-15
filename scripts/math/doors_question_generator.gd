@@ -10,15 +10,19 @@ const TIER_NAMES: Dictionary = {
 	2: "Level 2: Times Tables (to 9×9)",
 	3: "Level 3: Missing Key & Two-Step",
 	4: "Level 4: Order of Operations",
+	5: "Level 5: Double-Digit Multiply",
+	6: "Level 6: Two-Product Locks",
+	7: "Level 7: Big Rune Multipliers",
+	8: "Level 8: Ancient Master Locks",
 }
 
 
 static func get_tier_label(tier: int) -> String:
-	return str(TIER_NAMES.get(clampi(tier, 1, 4), "Level 1"))
+	return str(TIER_NAMES.get(clampi(tier, 1, GameState.MAX_ACTIVITY_TIER), "Level 1"))
 
 
 static func generate(tier: int) -> MathQuestion:
-	var clamped: int = clampi(tier, 1, 4)
+	var clamped: int = clampi(tier, 1, GameState.MAX_ACTIVITY_TIER)
 	match clamped:
 		1:
 			return _gen_basic_groups()
@@ -30,6 +34,14 @@ static func generate(tier: int) -> MathQuestion:
 			return _gen_two_step_mul_add(3)
 		4:
 			return _gen_order_of_operations()
+		5:
+			return _gen_double_digit_mul(5, 11, 19, 3, 9)
+		6:
+			return _gen_two_product_lock()
+		7:
+			return _gen_double_digit_mul(7, 12, 29, 6, 12)
+		8:
+			return _gen_ancient_master_lock()
 	return _gen_basic_groups()
 
 
@@ -140,4 +152,79 @@ static func _gen_order_of_operations() -> MathQuestion:
 		q.prompt = "Careful with the order! Multiply before you subtract."
 		q.expression_text = "%d  -  %d  ×  %d  =  ?" % [base, m1, m2]
 		q.hint_text = "Tip: Multiply %d × %d = %d first, then do %d - %d!" % [m1, m2, m1 * m2, base, m1 * m2]
+	return q
+
+
+static func _gen_double_digit_mul(tier_num: int, min_a: int, max_a: int, min_b: int, max_b: int) -> MathQuestion:
+	var a: int = randi_range(min_a, max_a)
+	var b: int = randi_range(min_b, max_b)
+	var tens: int = (a / 10) * 10
+	var ones: int = a % 10
+
+	var q: MathQuestion = MathQuestion.new()
+	q.operation = "mul"
+	q.tier = tier_num
+	q.group_count = clampi(b, 1, 5)
+	q.items_per_group = 0
+	q.visual_icon_path = GEM_ICON
+	q.visual_badge_text = "%d rows × %d gems" % [a, b]
+	q.correct_answer = a * b
+	q.prompt = "A grand gate holds %d rows with %d gems each. How many gems in all?" % [a, b]
+	q.expression_text = "%d  ×  %d  =  ?" % [a, b]
+	q.hint_text = "Tip: Split %d into %d + %d: (%d × %d) + (%d × %d) = %d + %d!" % [
+		a, tens, ones, tens, b, ones, b, tens * b, ones * b
+	]
+	return q
+
+
+static func _gen_two_product_lock() -> MathQuestion:
+	var a: int = randi_range(3, 8)
+	var b: int = randi_range(3, 8)
+	var c: int = randi_range(2, 7)
+	var d: int = randi_range(2, 7)
+
+	var q: MathQuestion = MathQuestion.new()
+	q.operation = "order"
+	q.tier = 6
+	q.group_count = 2
+	q.items_per_group = 0
+	q.visual_icon_path = GEM_ICON
+	q.visual_badge_text = "(%d×%d) + (%d×%d)" % [a, b, c, d]
+	q.correct_answer = (a * b) + (c * d)
+	q.prompt = "Solve both rune pairs first, then add their gem totals!"
+	q.expression_text = "%d × %d  +  %d × %d  =  ?" % [a, b, c, d]
+	q.hint_text = "Tip: Multiply before adding! (%d × %d = %d) + (%d × %d = %d)." % [
+		a, b, a * b, c, d, c * d
+	]
+	return q
+
+
+static func _gen_ancient_master_lock() -> MathQuestion:
+	var q: MathQuestion = MathQuestion.new()
+	q.operation = "order"
+	q.tier = 8
+	q.visual_icon_path = GEM_ICON
+	if randi() % 2 == 0:
+		var a: int = randi_range(4, 9)
+		var b: int = randi_range(3, 8)
+		var mult: int = randi_range(4, 9)
+		var bonus: int = randi_range(5, 25)
+		q.group_count = 3
+		q.visual_badge_text = "(%d+%d) × %d + %d" % [a, b, mult, bonus]
+		q.correct_answer = (a + b) * mult + bonus
+		q.prompt = "Master lock! Parentheses first, then multiply, then add the bonus!"
+		q.expression_text = "(%d + %d) × %d + %d  =  ?" % [a, b, mult, bonus]
+		q.hint_text = "Tip: %d + %d = %d, then %d × %d = %d, then add %d!" % [
+			a, b, a + b, a + b, mult, (a + b) * mult, bonus
+		]
+	else:
+		var m1: int = randi_range(6, 12)
+		var m2: int = randi_range(6, 12)
+		var base: int = m1 * m2 + randi_range(12, 60)
+		q.group_count = 4
+		q.visual_badge_text = "Multiply before subtract!"
+		q.correct_answer = base - (m1 * m2)
+		q.prompt = "Final temple cipher! Multiply first, then subtract from %d." % base
+		q.expression_text = "%d  -  %d × %d  =  ?" % [base, m1, m2]
+		q.hint_text = "Tip: First %d × %d = %d, then %d - %d!" % [m1, m2, m1 * m2, base, m1 * m2]
 	return q
