@@ -45,16 +45,7 @@ func _on_play_again() -> void:
 
 
 func _get_tier_text(activity_id: String, tier: int) -> String:
-	match activity_id:
-		"little_shop":
-			return ShopQuestionGenerator.get_tier_label(tier)
-		"puzzle_doors":
-			return DoorsQuestionGenerator.get_tier_label(tier)
-		"little_builder":
-			return BuilderQuestionGenerator.get_tier_label(tier)
-		"fair_sharing":
-			return SharingQuestionGenerator.get_tier_label(tier)
-	return "Level %d" % tier
+	return GameState.get_activity_tier_label(activity_id, tier)
 
 
 func _populate_summary() -> void:

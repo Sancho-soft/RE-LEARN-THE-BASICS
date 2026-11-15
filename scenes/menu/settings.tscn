@@ -1,9 +1,51 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scenes/menu/settings.gd" id="2_settings_gd"]
 [ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
 [ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.84, 0.88, 0.91, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grabber_area"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.86, 0.42, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grabber_highlight"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.9, 0.55, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -32,7 +74,7 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Card"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
 layout_mode = 2
@@ -55,6 +97,37 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Gentle background melody while you play."
 autowrap_mode = 2
+
+[node name="BgmVolumeRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BgmVolumeTitle" type="Label" parent="CenterContainer/Card/VBoxContainer/BgmVolumeRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "BGM volume"
+
+[node name="BgmVolumeSlider" type="HSlider" parent="CenterContainer/Card/VBoxContainer/BgmVolumeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_grabber_area")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_grabber_highlight")
+max_value = 100.0
+step = 1.0
+value = 100.0
+
+[node name="BgmVolumeValueLabel" type="Label" parent="CenterContainer/Card/VBoxContainer/BgmVolumeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "100%"
+horizontal_alignment = 2
 
 [node name="SfxToggle" type="CheckButton" parent="CenterContainer/Card/VBoxContainer"]
 unique_name_in_owner = true

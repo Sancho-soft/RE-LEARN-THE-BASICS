@@ -27,7 +27,7 @@ func _on_stats_changed(_c: int, _s: int) -> void:
 
 func _refresh_all() -> void:
 	_coins_label.text = str(GameState.coins)
-	_stars_label.text = "%d / 12" % GameState.stars
+	_stars_label.text = "%d / %d" % [GameState.stars, GameState.activity_stars.size() * 3]
 	_solved_label.text = "Questions Solved: %d" % GameState.total_solved
 	_rebuild_mastery_list()
 	_rebuild_sticker_grid()
@@ -38,10 +38,14 @@ func _rebuild_mastery_list() -> void:
 		child.queue_free()
 
 	var activities: Array[Dictionary] = [
-		{"id": "little_shop", "name": "1. The Little Shop", "tier_text": ShopQuestionGenerator.get_tier_label(GameState.get_activity_tier("little_shop"))},
-		{"id": "puzzle_doors", "name": "2. Puzzle Doors", "tier_text": DoorsQuestionGenerator.get_tier_label(GameState.get_activity_tier("puzzle_doors"))},
-		{"id": "little_builder", "name": "3. Little Builder", "tier_text": BuilderQuestionGenerator.get_tier_label(GameState.get_activity_tier("little_builder"))},
-		{"id": "fair_sharing", "name": "4. Fair Sharing", "tier_text": SharingQuestionGenerator.get_tier_label(GameState.get_activity_tier("fair_sharing"))},
+		{"id": "little_shop", "name": "1. The Little Shop"},
+		{"id": "puzzle_doors", "name": "2. Puzzle Doors"},
+		{"id": "little_builder", "name": "3. Little Builder"},
+		{"id": "fair_sharing", "name": "4. Fair Sharing"},
+		{"id": "number_patterns", "name": "5. Number Patterns"},
+		{"id": "clock_time", "name": "6. Clock & Time"},
+		{"id": "rocket_shapes", "name": "7. Rocket Shapes"},
+		{"id": "coin_jar", "name": "8. Coin Jar"},
 	]
 
 	for act: Dictionary in activities:
@@ -57,11 +61,11 @@ func _rebuild_mastery_list() -> void:
 
 		var title: Label = Label.new()
 		title.text = str(act["name"])
-		title.add_theme_font_size_override("font_size", 22)
+		title.add_theme_font_size_override("font_size", 19)
 
 		var tier_lbl: Label = Label.new()
-		tier_lbl.text = str(act["tier_text"])
-		tier_lbl.add_theme_font_size_override("font_size", 17)
+		tier_lbl.text = GameState.get_activity_tier_label(act_id)
+		tier_lbl.add_theme_font_size_override("font_size", 14)
 		tier_lbl.add_theme_color_override("font_color", Color(0.129412, 0.619608, 0.737255, 1.0))
 
 		info.add_child(title)
@@ -69,7 +73,7 @@ func _rebuild_mastery_list() -> void:
 
 		var stars_lbl: Label = Label.new()
 		stars_lbl.text = star_str
-		stars_lbl.add_theme_font_size_override("font_size", 26)
+		stars_lbl.add_theme_font_size_override("font_size", 22)
 		stars_lbl.add_theme_color_override("font_color", Color(0.92, 0.65, 0.08, 1.0))
 
 		row.add_child(info)

@@ -13,6 +13,8 @@ const BEAR_TEX: Texture2D = preload("res://assets/art/customer_bear.svg")
 const BEAR_TALK_TEX: Texture2D = preload("res://assets/art/customer_bear_talk.svg")
 const BUNNY_TEX: Texture2D = preload("res://assets/art/customer_bunny.svg")
 const BUNNY_TALK_TEX: Texture2D = preload("res://assets/art/customer_bunny_talk.svg")
+const MASCOT_TEX: Texture2D = preload("res://assets/art/mascot.svg")
+const MASCOT_TALK_TEX: Texture2D = preload("res://assets/art/mascot_talk.svg")
 const SPARKLE_TEX: Texture2D = preload("res://assets/art/sparkle.svg")
 
 const ACTIVITY_CONFIG: Dictionary = {
@@ -36,6 +38,34 @@ const ACTIVITY_CONFIG: Dictionary = {
 		"hero": BUNNY_TEX,
 		"hero_talk": BUNNY_TALK_TEX,
 		"progress_noun": "Round",
+	},
+	"number_patterns": {
+		"title": "Number Patterns",
+		"tag": "GARDEN PATH",
+		"hero": MASCOT_TEX,
+		"hero_talk": MASCOT_TALK_TEX,
+		"progress_noun": "Step",
+	},
+	"clock_time": {
+		"title": "Clock & Time",
+		"tag": "SUNDIAL TOWER",
+		"hero": BUNNY_TEX,
+		"hero_talk": BUNNY_TALK_TEX,
+		"progress_noun": "Tick",
+	},
+	"rocket_shapes": {
+		"title": "Rocket Shapes",
+		"tag": "LAUNCH PAD",
+		"hero": BEAR_TEX,
+		"hero_talk": BEAR_TALK_TEX,
+		"progress_noun": "Stage",
+	},
+	"coin_jar": {
+		"title": "Coin Jar",
+		"tag": "TREASURE VAULT",
+		"hero": MASCOT_TEX,
+		"hero_talk": MASCOT_TALK_TEX,
+		"progress_noun": "Puzzle",
 	},
 }
 
@@ -98,18 +128,19 @@ func _generate_for_activity(tier: int) -> MathQuestion:
 			return BuilderQuestionGenerator.generate(tier)
 		"fair_sharing":
 			return SharingQuestionGenerator.generate(tier)
+		"number_patterns":
+			return PatternsQuestionGenerator.generate(tier)
+		"clock_time":
+			return TimeQuestionGenerator.generate(tier)
+		"rocket_shapes":
+			return ShapesQuestionGenerator.generate(tier)
+		"coin_jar":
+			return CoinJarQuestionGenerator.generate(tier)
 	return DoorsQuestionGenerator.generate(tier)
 
 
 func _get_tier_label(tier: int) -> String:
-	match _activity_id:
-		"puzzle_doors":
-			return DoorsQuestionGenerator.get_tier_label(tier)
-		"little_builder":
-			return BuilderQuestionGenerator.get_tier_label(tier)
-		"fair_sharing":
-			return SharingQuestionGenerator.get_tier_label(tier)
-	return "Level %d" % tier
+	return GameState.get_activity_tier_label(_activity_id, tier)
 
 
 func _load_next_question() -> void:
@@ -239,7 +270,7 @@ func _handle_correct_answer() -> void:
 		_miss_streak = _miss_streak + 1 if _attempts_on_question >= 2 else 0
 
 	var level_note: String = ""
-	if _correct_streak >= 2 and _current_tier < 4:
+	if _correct_streak >= 2 and _current_tier < GameState.MAX_ACTIVITY_TIER:
 		_current_tier += 1
 		_correct_streak = 0
 		level_note = " Level up!"
