@@ -9,7 +9,7 @@ const MAX_ACTIVITY_TIER: int = 8
 const FADE_COLOR: Color = Color(0.184314, 0.282353, 0.345098, 1.0) # Dark teal #2F4858
 const FADE_DURATION: float = 0.18
 
-const BGM_PATH: String = "res://assets/audio/bgm_cozy.wav"
+const BGM_PATH: String = "res://assets/audio/bgm_cozy.mp3"
 const RARE_BGM_PATH: String = "res://scenes/menu/re-learn the basics main theme (Secret).mp3"
 const BGM_BASE_DB: float = -10.0
 const BGM_DUCK_DB: float = -16.0
@@ -63,6 +63,7 @@ var activity_stars: Dictionary = {
 	"rocket_shapes": 0,
 	"coin_jar": 0,
 }
+var activity_level_stars: Dictionary = {}
 var activity_tiers: Dictionary = {
 	"little_shop": 1,
 	"puzzle_doors": 1,
@@ -165,13 +166,8 @@ func _setup_bgm() -> void:
 	_bgm_player.volume_db = _get_bgm_target_db()
 	add_child(_bgm_player)
 
-	if ResourceLoader.exists(BGM_PATH):
-		var stream: AudioStream = load(BGM_PATH) as AudioStream
-		if stream is AudioStreamWAV:
-			var wav: AudioStreamWAV = stream as AudioStreamWAV
-			wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
-			wav.loop_begin = 0
-			wav.loop_end = wav.data.size() / 2
+	var stream: AudioStream = _load_bgm_stream(BGM_PATH)
+	if stream != null:
 		_bgm_player.stream = stream
 		if music_enabled:
 			_bgm_player.play()
@@ -245,15 +241,24 @@ func activate_rare_theme() -> bool:
 func _load_rare_bgm() -> AudioStream:
 	if _rare_bgm_stream != null:
 		return _rare_bgm_stream
-	var stream: AudioStream = null
-	if ResourceLoader.exists(RARE_BGM_PATH):
-		stream = load(RARE_BGM_PATH) as AudioStream
-	if stream == null and FileAccess.file_exists(RARE_BGM_PATH):
-		stream = AudioStreamMP3.load_from_file(RARE_BGM_PATH)
-	if stream is AudioStreamMP3:
-		(stream as AudioStreamMP3).loop = true
-	_rare_bgm_stream = stream
+	_rare_bgm_stream = _load_bgm_stream(RARE_BGM_PATH)
 	return _rare_bgm_stream
+
+
+func _load_bgm_stream(path: String) -> AudioStream:
+	var stream: AudioStream = null
+	if ResourceLoader.exists(path):
+		stream = load(path) as AudioStream
+	if stream == null and path.to_lower().ends_with(".mp3") and FileAccess.file_exists(path):
+		stream = AudioStreamMP3.load_from_file(path)
+	if stream is AudioStreamWAV:
+		var wav: AudioStreamWAV = stream as AudioStreamWAV
+		wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		wav.loop_begin = 0
+		wav.loop_end = wav.data.size() / 2
+	elif stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
+	return stream
 
 
 func _switch_to_rare_bgm(rare_stream: AudioStream) -> void:
@@ -412,13 +417,54 @@ func get_activity_tier_label(activity_id: String, tier: int = -1) -> String:
 	return "Level %d" % resolved_tier
 
 
-func add_rewards(earned_coins: int, earned_stars: int, activity_id: String = "", solved_count: int = 8) -> void:
+func get_level_stars(activity_id: String, tier: int = -1) -> int:
+	var resolved_tier: int = get_activity_tier(activity_id) if tier < 1 else clampi(tier, 1, MAX_ACTIVITY_TIER)
+	var per_level: Variant = activity_level_stars.get(activity_id, {})
+	if per_level is Dictionary:
+		var level_dict: Dictionary = per_level as Dictionary
+		if level_dict.has(resolved_tier):
+			return clampi(int(level_dict[resolved_tier]), 0, 3)
+		return clampi(int(level_dict.get(str(resolved_tier), 0)), 0, 3)
+	return 0
+
+
+func get_activity_total_stars(activity_id: String) -> int:
+	var total: int = 0
+	for tier_idx: int in range(1, MAX_ACTIVITY_TIER + 1):
+		total += get_level_stars(activity_id, tier_idx)
+	return total
+
+
+func get_activity_completed_levels(activity_id: String) -> int:
+	var count: int = 0
+	for tier_idx: int in range(1, MAX_ACTIVITY_TIER + 1):
+		if get_level_stars(activity_id, tier_idx) > 0:
+			count += 1
+	return count
+
+
+func has_finished_max_level(activity_id: String) -> bool:
+	return get_level_stars(activity_id, MAX_ACTIVITY_TIER) > 0
+
+
+func get_max_activity_stars() -> int:
+	return MAX_ACTIVITY_TIER * 3
+
+
+func get_max_total_stars() -> int:
+	return activity_stars.size() * MAX_ACTIVITY_TIER * 3
+
+
+func add_rewards(earned_coins: int, earned_stars: int, activity_id: String = "", solved_count: int = 8, tier: int = -1) -> void:
 	coins += maxi(earned_coins, 0)
 	total_solved += maxi(solved_count, 0)
 	if activity_id != "":
-		var prev_best: int = int(activity_stars.get(activity_id, 0))
-		if earned_stars > prev_best:
-			activity_stars[activity_id] = earned_stars
+		var target_tier: int = get_activity_tier(activity_id) if tier < 1 else clampi(tier, 1, MAX_ACTIVITY_TIER)
+		var per_level: Dictionary = _ensure_activity_level_dict(activity_id)
+		var prev_best: int = clampi(int(per_level.get(target_tier, 0)), 0, 3)
+		var clamped_stars: int = clampi(earned_stars, 0, 3)
+		if clamped_stars > prev_best:
+			per_level[target_tier] = clamped_stars
 		_recalculate_total_stars()
 	else:
 		stars += maxi(earned_stars, 0)
@@ -458,10 +504,19 @@ func get_sticker_icon_path(sticker_id: String) -> String:
 	return ""
 
 
+func _ensure_activity_level_dict(activity_id: String) -> Dictionary:
+	if not activity_level_stars.has(activity_id) or not (activity_level_stars[activity_id] is Dictionary):
+		activity_level_stars[activity_id] = {}
+	return activity_level_stars[activity_id] as Dictionary
+
+
 func _recalculate_total_stars() -> void:
 	var total: int = 0
-	for key: Variant in activity_stars:
-		total += int(activity_stars[key])
+	for key: Variant in activity_stars.keys():
+		var act_id: String = str(key)
+		var act_total: int = get_activity_total_stars(act_id)
+		activity_stars[act_id] = act_total
+		total += act_total
 	stars = total
 
 
@@ -473,6 +528,7 @@ func save_game() -> void:
 	config.set_value("progress", "stars", stars)
 	config.set_value("progress", "total_solved", total_solved)
 	config.set_value("progress", "activity_stars", activity_stars)
+	config.set_value("progress", "activity_level_stars", activity_level_stars)
 	config.set_value("progress", "activity_tiers", activity_tiers)
 	config.set_value("progress", "unlocked_stickers", unlocked_stickers)
 	config.set_value("progress", "equipped_sticker", equipped_sticker)
@@ -503,6 +559,28 @@ func load_game() -> void:
 		activity_tiers.merge(loaded_tiers as Dictionary, true)
 	elif config.has_section_key("progress", "shop_tier"):
 		activity_tiers["little_shop"] = clampi(int(config.get_value("progress", "shop_tier", 1)), 1, MAX_ACTIVITY_TIER)
+
+	activity_level_stars.clear()
+	var loaded_level_stars: Variant = config.get_value("progress", "activity_level_stars", null)
+	if loaded_level_stars is Dictionary:
+		for act_key: Variant in (loaded_level_stars as Dictionary).keys():
+			var act_id: String = str(act_key)
+			var raw_levels: Variant = (loaded_level_stars as Dictionary)[act_key]
+			if raw_levels is Dictionary:
+				var normalized: Dictionary = {}
+				for tier_key: Variant in (raw_levels as Dictionary).keys():
+					var tier_num: int = clampi(int(tier_key), 1, MAX_ACTIVITY_TIER)
+					var star_num: int = clampi(int((raw_levels as Dictionary)[tier_key]), 0, 3)
+					normalized[tier_num] = maxi(int(normalized.get(tier_num, 0)), star_num)
+				activity_level_stars[act_id] = normalized
+	else:
+		# Migrate pre-revamp saves cleanly by keeping prior stars on each activity's active tier.
+		for act_key: Variant in activity_stars.keys():
+			var act_id: String = str(act_key)
+			var legacy_stars: int = clampi(int(activity_stars.get(act_id, 0)), 0, 3)
+			if legacy_stars > 0:
+				var tier_num: int = get_activity_tier(act_id)
+				activity_level_stars[act_id] = {tier_num: legacy_stars}
 
 	var loaded_stickers: Variant = config.get_value("progress", "unlocked_stickers", [])
 	if loaded_stickers is Array:

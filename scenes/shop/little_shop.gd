@@ -296,7 +296,7 @@ func _finish_shift() -> void:
 		"total_questions": QUESTIONS_PER_SHIFT,
 		"tier_reached": _current_tier,
 	}
-	GameState.add_rewards(_session_coins, stars_earned, "little_shop", QUESTIONS_PER_SHIFT)
+	GameState.add_rewards(_session_coins, stars_earned, "little_shop", QUESTIONS_PER_SHIFT, _current_tier)
 	GameState.play_sfx(&"win")
 	GameState.change_scene(RESULTS_SCENE)
 

@@ -8,6 +8,7 @@ const ACTIVITIES_SCENE: String = "res://scenes/activities/activities_screen.tscn
 const MAIN_MENU_SCENE: String = "res://scenes/menu/main_menu.tscn"
 
 const STAR_FILLED: Texture2D = preload("res://assets/ui/star.svg")
+const STAR_RAINBOW: Texture2D = preload("res://assets/ui/star_rainbow.svg")
 const STAR_EMPTY: Texture2D = preload("res://assets/ui/star_empty.svg")
 const SPARKLE_TEX: Texture2D = preload("res://assets/art/sparkle.svg")
 const MASCOT_IDLE: Texture2D = preload("res://assets/art/mascot.svg")
@@ -58,16 +59,21 @@ func _populate_summary() -> void:
 	var total_q: int = int(summary.get("total_questions", 8))
 	var tier: int = int(summary.get("tier_reached", GameState.get_activity_tier(_activity_id)))
 
+	var is_max_tier: bool = tier >= GameState.MAX_ACTIVITY_TIER
 	var cheer_line: String = "You finished the whole round! That takes real heart!"
-	match earned_stars:
-		3:
-			_title_label.text = "%s: SUPER!" % activity_name.to_upper()
-			cheer_line = "Hooray! You shone like a true math star today!"
-		2:
-			_title_label.text = "%s: GREAT!" % activity_name.to_upper()
-			cheer_line = "Great teamwork! Every round gets smoother and brighter!"
-		_:
-			_title_label.text = "%s COMPLETE!" % activity_name.to_upper()
+	if is_max_tier:
+		_title_label.text = "%s: RAINBOW STARS!" % activity_name.to_upper()
+		cheer_line = "Amazing! You beat Max Level %d and unlocked Rainbow Stars!" % GameState.MAX_ACTIVITY_TIER
+	else:
+		match earned_stars:
+			3:
+				_title_label.text = "%s: SUPER!" % activity_name.to_upper()
+				cheer_line = "Hooray! You shone like a true math star today!"
+			2:
+				_title_label.text = "%s: GREAT!" % activity_name.to_upper()
+				cheer_line = "Great teamwork! Every round gets smoother and brighter!"
+			_:
+				_title_label.text = "%s COMPLETE!" % activity_name.to_upper()
 
 	var talker: TalkingAvatar = TalkingAvatar.new()
 	add_child(talker)
@@ -75,8 +81,9 @@ func _populate_summary() -> void:
 	talker.say(cheer_line)
 	talker.react_happy()
 
-	_detail_label.text = "Solved %d / %d smoothly  •  %s" % [clean, total_q, _get_tier_text(_activity_id, tier)]
-	_totals_label.text = "Total Saved:  %d Coins   |   %d Stars" % [GameState.coins, GameState.stars]
+	var act_stars: int = GameState.get_activity_total_stars(_activity_id)
+	_detail_label.text = "Solved %d / %d smoothly  •  %s (%d/%d ★)" % [clean, total_q, _get_tier_text(_activity_id, tier), act_stars, GameState.get_max_activity_stars()]
+	_totals_label.text = "Total Saved:  %d Coins   |   %d / %d Stars" % [GameState.coins, GameState.stars, GameState.get_max_total_stars()]
 
 	if GameState.reduce_motion or earned_coins <= 0:
 		_coins_earned_label.text = "+%d Coins Earned!" % earned_coins
@@ -85,13 +92,14 @@ func _populate_summary() -> void:
 		var coin_tween: Tween = create_tween()
 		coin_tween.tween_method(_set_coin_rollup, 0, earned_coins, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
+	var filled_tex: Texture2D = STAR_RAINBOW if is_max_tier else STAR_FILLED
 	var star_nodes: Array[Node] = _stars_row.get_children()
 	for i: int in star_nodes.size():
 		var rect: TextureRect = star_nodes[i] as TextureRect
 		if rect == null:
 			continue
 		var is_earned: bool = i < earned_stars
-		rect.texture = STAR_FILLED if is_earned else STAR_EMPTY
+		rect.texture = filled_tex if is_earned else STAR_EMPTY
 		if is_earned and not GameState.reduce_motion:
 			rect.pivot_offset = rect.custom_minimum_size * 0.5
 			rect.scale = Vector2.ZERO
