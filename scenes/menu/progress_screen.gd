@@ -5,6 +5,8 @@ extends Control
 
 const MAIN_MENU_SCENE: String = "res://scenes/menu/main_menu.tscn"
 const JUICY_BUTTON_SCRIPT: Script = preload("res://scenes/components/juicy_button.gd")
+const STAR_FILLED: Texture2D = preload("res://assets/ui/star.svg")
+const STAR_RAINBOW: Texture2D = preload("res://assets/ui/star_rainbow.svg")
 
 @onready var _back_btn: Button = %BackButton
 @onready var _coins_label: Label = %CoinsLabel
@@ -27,7 +29,7 @@ func _on_stats_changed(_c: int, _s: int) -> void:
 
 func _refresh_all() -> void:
 	_coins_label.text = str(GameState.coins)
-	_stars_label.text = "%d / %d" % [GameState.stars, GameState.activity_stars.size() * 3]
+	_stars_label.text = "%d / %d" % [GameState.stars, GameState.get_max_total_stars()]
 	_solved_label.text = "Questions Solved: %d" % GameState.total_solved
 	_rebuild_mastery_list()
 	_rebuild_sticker_grid()
@@ -50,14 +52,17 @@ func _rebuild_mastery_list() -> void:
 
 	for act: Dictionary in activities:
 		var act_id: String = str(act["id"])
-		var star_count: int = int(GameState.activity_stars.get(act_id, 0))
-		var star_str: String = "★".repeat(star_count) + "☆".repeat(3 - star_count)
+		var star_count: int = GameState.get_activity_total_stars(act_id)
+		var max_act_stars: int = GameState.get_max_activity_stars()
+		var levels_cleared: int = GameState.get_activity_completed_levels(act_id)
+		var max_done: bool = GameState.has_finished_max_level(act_id)
 
 		var row: HBoxContainer = HBoxContainer.new()
 		row.add_theme_constant_override("separation", 12)
 
 		var info: VBoxContainer = VBoxContainer.new()
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		info.add_theme_constant_override("separation", 0)
 
 		var title: Label = Label.new()
 		title.text = str(act["name"])
@@ -71,13 +76,40 @@ func _rebuild_mastery_list() -> void:
 		info.add_child(title)
 		info.add_child(tier_lbl)
 
+		var stars_col: VBoxContainer = VBoxContainer.new()
+		stars_col.alignment = BoxContainer.ALIGNMENT_CENTER
+		stars_col.add_theme_constant_override("separation", 0)
+
+		var stars_top: HBoxContainer = HBoxContainer.new()
+		stars_top.alignment = BoxContainer.ALIGNMENT_END
+		stars_top.add_theme_constant_override("separation", 5)
+
 		var stars_lbl: Label = Label.new()
-		stars_lbl.text = star_str
-		stars_lbl.add_theme_font_size_override("font_size", 22)
-		stars_lbl.add_theme_color_override("font_color", Color(0.92, 0.65, 0.08, 1.0))
+		stars_lbl.text = "%d / %d" % [star_count, max_act_stars]
+		stars_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		stars_lbl.add_theme_font_size_override("font_size", 18)
+		stars_lbl.add_theme_color_override("font_color", Color(0.55, 0.30, 0.88, 1.0) if max_done else Color(0.92, 0.65, 0.08, 1.0))
+
+		var star_icon: TextureRect = TextureRect.new()
+		star_icon.custom_minimum_size = Vector2(20, 20)
+		star_icon.texture = STAR_RAINBOW if max_done else STAR_FILLED
+		star_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		star_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+
+		stars_top.add_child(stars_lbl)
+		stars_top.add_child(star_icon)
+
+		var levels_lbl: Label = Label.new()
+		levels_lbl.text = "%d / %d levels%s" % [levels_cleared, GameState.MAX_ACTIVITY_TIER, " (Max ★)" if max_done else ""]
+		levels_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		levels_lbl.add_theme_font_size_override("font_size", 13)
+		levels_lbl.add_theme_color_override("font_color", Color(0.32, 0.42, 0.48, 1.0))
+
+		stars_col.add_child(stars_top)
+		stars_col.add_child(levels_lbl)
 
 		row.add_child(info)
-		row.add_child(stars_lbl)
+		row.add_child(stars_col)
 		_mastery_list.add_child(row)
 
 

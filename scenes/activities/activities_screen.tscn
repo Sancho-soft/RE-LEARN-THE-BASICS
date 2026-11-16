@@ -18,9 +18,9 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 content_margin_left = 20.0
-content_margin_top = 16.0
+content_margin_top = 14.0
 content_margin_right = 20.0
-content_margin_bottom = 16.0
+content_margin_bottom = 14.0
 bg_color = Color(1, 0.972549, 0.905882, 1)
 border_width_left = 4
 border_width_top = 4
@@ -175,10 +175,10 @@ corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-expand_margin_left = 3.0
-expand_margin_top = 3.0
-expand_margin_right = 3.0
-expand_margin_bottom = 3.0
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
 
 [node name="ActivitiesScreen" type="Control"]
 layout_mode = 3
@@ -267,7 +267,7 @@ stretch_mode = 5
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "0"
+text = "0 / 192"
 
 [node name="PageRow" type="HBoxContainer" parent="MarginContainer/MainVBox"]
 layout_mode = 2
@@ -294,18 +294,18 @@ press_sfx = &"toggle"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/h_separation = 22
-theme_override_constants/v_separation = 18
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 22
 columns = 2
 
 [node name="ShopCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox"]
 layout_mode = 2
@@ -336,32 +336,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Sums to 10"
 autowrap_mode = 2
 
-[node name="ShopStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="ShopStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/ShopStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/StarsCol/ShopStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/ShopStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/StarsCol/ShopStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/ShopStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/StarsCol/ShopStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="ShopActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox"]
 layout_mode = 2
@@ -424,13 +437,13 @@ text = "PLAY"
 script = ExtResource("4_juicy")
 
 [node name="DoorsCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox"]
 layout_mode = 2
@@ -461,32 +474,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Equal Groups"
 autowrap_mode = 2
 
-[node name="DoorsStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="DoorsStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/DoorsStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/StarsCol/DoorsStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/DoorsStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/StarsCol/DoorsStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/DoorsStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/StarsCol/DoorsStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="DoorsActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox"]
 layout_mode = 2
@@ -549,13 +575,13 @@ text = "PLAY"
 script = ExtResource("4_juicy")
 
 [node name="BuilderCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox"]
 layout_mode = 2
@@ -586,32 +612,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Stacking Bricks"
 autowrap_mode = 2
 
-[node name="BuilderStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="BuilderStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/BuilderStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/StarsCol/BuilderStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/BuilderStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/StarsCol/BuilderStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/BuilderStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/StarsCol/BuilderStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="BuilderActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox"]
 layout_mode = 2
@@ -674,13 +713,13 @@ text = "PLAY"
 script = ExtResource("4_juicy")
 
 [node name="SharingCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox"]
 layout_mode = 2
@@ -711,32 +750,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Equal Sharing"
 autowrap_mode = 2
 
-[node name="SharingStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="SharingStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/SharingStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/StarsCol/SharingStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/SharingStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/StarsCol/SharingStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/SharingStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/StarsCol/SharingStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="SharingActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox"]
 layout_mode = 2
@@ -800,13 +852,13 @@ script = ExtResource("4_juicy")
 
 [node name="PatternsCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox"]
 layout_mode = 2
@@ -837,32 +889,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Skip-Count (2s & 5s)"
 autowrap_mode = 2
 
-[node name="PatternsStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="PatternsStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/PatternsStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/StarsCol/PatternsStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/PatternsStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/StarsCol/PatternsStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/PatternsStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/StarsCol/PatternsStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="PatternsActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox"]
 layout_mode = 2
@@ -926,13 +991,13 @@ script = ExtResource("4_juicy")
 
 [node name="TimeCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox"]
 layout_mode = 2
@@ -963,32 +1028,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Hours to Minutes"
 autowrap_mode = 2
 
-[node name="TimeStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="TimeStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/TimeStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/StarsCol/TimeStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/TimeStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/StarsCol/TimeStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/TimeStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/StarsCol/TimeStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="TimeActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox"]
 layout_mode = 2
@@ -1052,13 +1130,13 @@ script = ExtResource("4_juicy")
 
 [node name="ShapesCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox"]
 layout_mode = 2
@@ -1089,32 +1167,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Counting Sides"
 autowrap_mode = 2
 
-[node name="ShapesStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="ShapesStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/ShapesStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/StarsCol/ShapesStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/ShapesStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/StarsCol/ShapesStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/ShapesStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/StarsCol/ShapesStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="ShapesActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox"]
 layout_mode = 2
@@ -1178,13 +1269,13 @@ script = ExtResource("4_juicy")
 
 [node name="CoinJarCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(484, 248)
+custom_minimum_size = Vector2(492, 204)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox"]
 layout_mode = 2
@@ -1215,32 +1306,45 @@ theme_override_font_sizes/font_size = 15
 text = "Level 1: Coin Stacks"
 autowrap_mode = 2
 
-[node name="CoinJarStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow"]
-unique_name_in_owner = true
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="CoinJarStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
 theme_override_constants/separation = 4
 
-[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/CoinJarStarsRow"]
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/StarsCol/CoinJarStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/CoinJarStarsRow"]
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/StarsCol/CoinJarStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/CoinJarStarsRow"]
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/StarsCol/CoinJarStarsRow"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("8_star_empty")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="CoinJarActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox"]
 layout_mode = 2

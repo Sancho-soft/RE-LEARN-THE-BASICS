@@ -7,6 +7,7 @@ const LITTLE_SHOP_SCENE: String = "res://scenes/shop/little_shop.tscn"
 const MATH_ACTIVITY_SCENE: String = "res://scenes/play/math_activity.tscn"
 
 const STAR_FILLED: Texture2D = preload("res://assets/ui/star.svg")
+const STAR_RAINBOW: Texture2D = preload("res://assets/ui/star_rainbow.svg")
 const STAR_EMPTY: Texture2D = preload("res://assets/ui/star_empty.svg")
 const PAGE_SIZE: int = 4
 const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_shapes", "coin_jar"]
@@ -21,6 +22,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _shop_tier_label: Label = %ShopTierLabel
 @onready var _shop_stars_row: HBoxContainer = %ShopStarsRow
+@onready var _shop_act_stars_label: Label = %ShopActivityStarsLabel
 @onready var _shop_prev_btn: Button = %ShopPrevLevelButton
 @onready var _shop_level_badge: Label = %ShopLevelBadge
 @onready var _shop_next_btn: Button = %ShopNextLevelButton
@@ -28,6 +30,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _doors_tier_label: Label = %DoorsTierLabel
 @onready var _doors_stars_row: HBoxContainer = %DoorsStarsRow
+@onready var _doors_act_stars_label: Label = %DoorsActivityStarsLabel
 @onready var _doors_prev_btn: Button = %DoorsPrevLevelButton
 @onready var _doors_level_badge: Label = %DoorsLevelBadge
 @onready var _doors_next_btn: Button = %DoorsNextLevelButton
@@ -35,6 +38,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _builder_tier_label: Label = %BuilderTierLabel
 @onready var _builder_stars_row: HBoxContainer = %BuilderStarsRow
+@onready var _builder_act_stars_label: Label = %BuilderActivityStarsLabel
 @onready var _builder_prev_btn: Button = %BuilderPrevLevelButton
 @onready var _builder_level_badge: Label = %BuilderLevelBadge
 @onready var _builder_next_btn: Button = %BuilderNextLevelButton
@@ -42,6 +46,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _sharing_tier_label: Label = %SharingTierLabel
 @onready var _sharing_stars_row: HBoxContainer = %SharingStarsRow
+@onready var _sharing_act_stars_label: Label = %SharingActivityStarsLabel
 @onready var _sharing_prev_btn: Button = %SharingPrevLevelButton
 @onready var _sharing_level_badge: Label = %SharingLevelBadge
 @onready var _sharing_next_btn: Button = %SharingNextLevelButton
@@ -49,6 +54,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _patterns_tier_label: Label = %PatternsTierLabel
 @onready var _patterns_stars_row: HBoxContainer = %PatternsStarsRow
+@onready var _patterns_act_stars_label: Label = %PatternsActivityStarsLabel
 @onready var _patterns_prev_btn: Button = %PatternsPrevLevelButton
 @onready var _patterns_level_badge: Label = %PatternsLevelBadge
 @onready var _patterns_next_btn: Button = %PatternsNextLevelButton
@@ -56,6 +62,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _time_tier_label: Label = %TimeTierLabel
 @onready var _time_stars_row: HBoxContainer = %TimeStarsRow
+@onready var _time_act_stars_label: Label = %TimeActivityStarsLabel
 @onready var _time_prev_btn: Button = %TimePrevLevelButton
 @onready var _time_level_badge: Label = %TimeLevelBadge
 @onready var _time_next_btn: Button = %TimeNextLevelButton
@@ -63,6 +70,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _shapes_tier_label: Label = %ShapesTierLabel
 @onready var _shapes_stars_row: HBoxContainer = %ShapesStarsRow
+@onready var _shapes_act_stars_label: Label = %ShapesActivityStarsLabel
 @onready var _shapes_prev_btn: Button = %ShapesPrevLevelButton
 @onready var _shapes_level_badge: Label = %ShapesLevelBadge
 @onready var _shapes_next_btn: Button = %ShapesNextLevelButton
@@ -70,6 +78,7 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 
 @onready var _coin_jar_tier_label: Label = %CoinJarTierLabel
 @onready var _coin_jar_stars_row: HBoxContainer = %CoinJarStarsRow
+@onready var _coin_jar_act_stars_label: Label = %CoinJarActivityStarsLabel
 @onready var _coin_jar_prev_btn: Button = %CoinJarPrevLevelButton
 @onready var _coin_jar_level_badge: Label = %CoinJarLevelBadge
 @onready var _coin_jar_next_btn: Button = %CoinJarNextLevelButton
@@ -82,12 +91,13 @@ var _page_count: int = 2
 
 func _ready() -> void:
 	_coins_label.text = str(GameState.coins)
-	_stars_label.text = str(GameState.stars)
+	_stars_label.text = "%d / %d" % [GameState.stars, GameState.get_max_total_stars()]
 
 	_card_controls = {
 		"little_shop": {
 			"tier_label": _shop_tier_label,
 			"stars_row": _shop_stars_row,
+			"act_stars_label": _shop_act_stars_label,
 			"prev_btn": _shop_prev_btn,
 			"badge": _shop_level_badge,
 			"next_btn": _shop_next_btn,
@@ -96,6 +106,7 @@ func _ready() -> void:
 		"puzzle_doors": {
 			"tier_label": _doors_tier_label,
 			"stars_row": _doors_stars_row,
+			"act_stars_label": _doors_act_stars_label,
 			"prev_btn": _doors_prev_btn,
 			"badge": _doors_level_badge,
 			"next_btn": _doors_next_btn,
@@ -104,6 +115,7 @@ func _ready() -> void:
 		"little_builder": {
 			"tier_label": _builder_tier_label,
 			"stars_row": _builder_stars_row,
+			"act_stars_label": _builder_act_stars_label,
 			"prev_btn": _builder_prev_btn,
 			"badge": _builder_level_badge,
 			"next_btn": _builder_next_btn,
@@ -112,6 +124,7 @@ func _ready() -> void:
 		"fair_sharing": {
 			"tier_label": _sharing_tier_label,
 			"stars_row": _sharing_stars_row,
+			"act_stars_label": _sharing_act_stars_label,
 			"prev_btn": _sharing_prev_btn,
 			"badge": _sharing_level_badge,
 			"next_btn": _sharing_next_btn,
@@ -120,6 +133,7 @@ func _ready() -> void:
 		"number_patterns": {
 			"tier_label": _patterns_tier_label,
 			"stars_row": _patterns_stars_row,
+			"act_stars_label": _patterns_act_stars_label,
 			"prev_btn": _patterns_prev_btn,
 			"badge": _patterns_level_badge,
 			"next_btn": _patterns_next_btn,
@@ -128,6 +142,7 @@ func _ready() -> void:
 		"clock_time": {
 			"tier_label": _time_tier_label,
 			"stars_row": _time_stars_row,
+			"act_stars_label": _time_act_stars_label,
 			"prev_btn": _time_prev_btn,
 			"badge": _time_level_badge,
 			"next_btn": _time_next_btn,
@@ -136,6 +151,7 @@ func _ready() -> void:
 		"rocket_shapes": {
 			"tier_label": _shapes_tier_label,
 			"stars_row": _shapes_stars_row,
+			"act_stars_label": _shapes_act_stars_label,
 			"prev_btn": _shapes_prev_btn,
 			"badge": _shapes_level_badge,
 			"next_btn": _shapes_next_btn,
@@ -144,6 +160,7 @@ func _ready() -> void:
 		"coin_jar": {
 			"tier_label": _coin_jar_tier_label,
 			"stars_row": _coin_jar_stars_row,
+			"act_stars_label": _coin_jar_act_stars_label,
 			"prev_btn": _coin_jar_prev_btn,
 			"badge": _coin_jar_level_badge,
 			"next_btn": _coin_jar_next_btn,
@@ -159,7 +176,6 @@ func _ready() -> void:
 		(ctrl["prev_btn"] as Button).pressed.connect(_change_activity_level.bind(activity_id, -1))
 		(ctrl["next_btn"] as Button).pressed.connect(_change_activity_level.bind(activity_id, 1))
 		(ctrl["play_btn"] as Button).pressed.connect(_launch_activity.bind(activity_id))
-		_populate_stars(ctrl["stars_row"] as HBoxContainer, int(GameState.activity_stars.get(activity_id, 0)))
 		_refresh_activity_level(activity_id)
 
 	_page_count = maxi(1, ceili(float(_grid.get_child_count()) / float(PAGE_SIZE)))
@@ -187,6 +203,17 @@ func _refresh_activity_level(activity_id: String) -> void:
 	(ctrl["badge"] as Label).text = "Lvl %d/%d" % [tier, GameState.MAX_ACTIVITY_TIER]
 	(ctrl["prev_btn"] as Button).disabled = tier <= 1
 	(ctrl["next_btn"] as Button).disabled = tier >= GameState.MAX_ACTIVITY_TIER
+	var is_max_tier: bool = tier == GameState.MAX_ACTIVITY_TIER
+	_populate_stars(ctrl["stars_row"] as HBoxContainer, GameState.get_level_stars(activity_id, tier), is_max_tier)
+	var act_stars_lbl: Label = ctrl["act_stars_label"] as Label
+	var total_act: int = GameState.get_activity_total_stars(activity_id)
+	var max_act: int = GameState.get_max_activity_stars()
+	if GameState.has_finished_max_level(activity_id):
+		act_stars_lbl.text = "MAX ★ %d/%d" % [total_act, max_act]
+		act_stars_lbl.add_theme_color_override("font_color", Color(0.55, 0.30, 0.88, 1.0))
+	else:
+		act_stars_lbl.text = "All: %d/%d ★" % [total_act, max_act]
+		act_stars_lbl.add_theme_color_override("font_color", Color(0.76, 0.49, 0.04, 1.0))
 
 
 func _get_tier_label(activity_id: String, tier: int) -> String:
@@ -242,12 +269,13 @@ func _animate_cards_in() -> void:
 		visible_index += 1
 
 
-func _populate_stars(row: HBoxContainer, filled_count: int) -> void:
+func _populate_stars(row: HBoxContainer, filled_count: int, use_rainbow: bool = false) -> void:
+	var filled_tex: Texture2D = STAR_RAINBOW if use_rainbow else STAR_FILLED
 	var icons: Array[Node] = row.get_children()
 	for i: int in icons.size():
 		var rect: TextureRect = icons[i] as TextureRect
 		if rect != null:
-			rect.texture = STAR_FILLED if i < filled_count else STAR_EMPTY
+			rect.texture = filled_tex if i < filled_count else STAR_EMPTY
 
 
 func _unhandled_input(event: InputEvent) -> void:

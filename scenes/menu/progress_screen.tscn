@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scenes/menu/progress_screen.gd" id="2_prog_gd"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
 [ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="5_coin"]
 [ext_resource type="Texture2D" path="res://assets/ui/star.svg" id="6_star"]
+[ext_resource type="Texture2D" path="res://assets/art/progress_banner.png" id="7_progress_banner"]
 
 [node name="ProgressScreen" type="Control"]
 layout_mode = 3
@@ -28,13 +29,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 26
+theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 30
+theme_override_constants/margin_bottom = 24
 
 [node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 
 [node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
 layout_mode = 2
@@ -47,12 +48,13 @@ text = "← Menu"
 script = ExtResource("4_juicy")
 press_sfx = &"back"
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/MainVBox/TopBar"]
+[node name="TitleBanner" type="TextureRect" parent="MarginContainer/MainVBox/TopBar"]
+custom_minimum_size = Vector2(520, 96)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 34
-text = "PROGRESS & STICKER SHOP"
-horizontal_alignment = 1
+texture = ExtResource("7_progress_banner")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
 layout_mode = 2
@@ -93,7 +95,7 @@ stretch_mode = 5
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "0 / 24"
+text = "0 / 192"
 
 [node name="ContentRow" type="HBoxContainer" parent="MarginContainer/MainVBox"]
 layout_mode = 2
@@ -106,7 +108,7 @@ size_flags_horizontal = 3
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentRow/MasteryPanel"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 10
 
 [node name="Header" type="Label" parent="MarginContainer/MainVBox/ContentRow/MasteryPanel/VBox"]
 layout_mode = 2
@@ -124,7 +126,7 @@ text = "Questions Solved: 0"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 5
 
 [node name="StickerPanel" type="PanelContainer" parent="MarginContainer/MainVBox/ContentRow"]
 layout_mode = 2

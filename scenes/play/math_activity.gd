@@ -387,6 +387,6 @@ func _finish_session() -> void:
 		"total_questions": QUESTIONS_PER_SESSION,
 		"tier_reached": _current_tier,
 	}
-	GameState.add_rewards(_session_coins, stars_earned, _activity_id, QUESTIONS_PER_SESSION)
+	GameState.add_rewards(_session_coins, stars_earned, _activity_id, QUESTIONS_PER_SESSION, _current_tier)
 	GameState.play_sfx(&"win")
 	GameState.change_scene(RESULTS_SCENE)
