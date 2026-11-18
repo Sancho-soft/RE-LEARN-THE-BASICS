@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scenes/play/math_activity.gd" id="2_act_gd"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" path="res://assets/art/door_closed.svg" id="6_hero"]
 [ext_resource type="Texture2D" path="res://assets/ui/hint_bulb.svg" id="7_bulb"]
 [ext_resource type="PackedScene" path="res://scenes/components/number_pad.tscn" id="8_numpad"]
+[ext_resource type="Script" path="res://scenes/components/question_stepper.gd" id="9_stepper"]
+[ext_resource type="Script" path="res://scenes/components/sticker_view.gd" id="10_sticker_view"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
 content_margin_left = 18.0
@@ -57,6 +59,54 @@ corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_streak"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.87, 0.45, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 7
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sticker_pill"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 0.972549, 0.905882, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar_card"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(1, 0.972549, 0.905882, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
 [node name="MathActivity" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -78,51 +128,87 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 22
+theme_override_constants/margin_top = 14
 theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 26
+theme_override_constants/margin_bottom = 18
 
 [node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 12
 
-[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+		[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 
 [node name="MenuButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "← Menu"
+text = "Pause"
 script = ExtResource("4_juicy")
 press_sfx = &"back"
 
 [node name="ProgressCard" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar_card")
 
-[node name="ProgressRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/ProgressCard"]
+[node name="ProgressVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/TopBar/ProgressCard"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 6
 alignment = 1
 
-[node name="ProgressLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressRow"]
+[node name="ProgressRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressVBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressVBox/ProgressRow"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "Door 1 / 8"
 
-[node name="Dot" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressRow"]
+[node name="Dot" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressVBox/ProgressRow"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "•"
 
-[node name="TierLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressRow"]
+[node name="TierLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressVBox/ProgressRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "Level 1"
+
+[node name="QuestionStepper" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/ProgressCard/ProgressVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+script = ExtResource("9_stepper")
+
+[node name="StreakPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_streak")
+
+[node name="StreakLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StreakPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "2 Streak!"
+
+[node name="StickerCheerPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sticker_pill")
+
+[node name="EquippedStickerView" type="Control" parent="MarginContainer/MainVBox/TopBar/StickerCheerPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("10_sticker_view")
 
 [node name="CoinsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
 unique_name_in_owner = true
@@ -153,7 +239,7 @@ theme_override_constants/separation = 24
 [node name="Stage" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
 [node name="HeroCard" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/Stage"]
 unique_name_in_owner = true

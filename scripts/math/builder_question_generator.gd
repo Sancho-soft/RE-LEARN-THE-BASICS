@@ -120,10 +120,10 @@ static func _gen_workshop_percent() -> MathQuestion:
 	q.tier = 4
 	q.group_count = 1
 	q.visual_icon_path = BRICK_ICON
-	q.visual_badge_text = "%d%% of ₱%d" % [pct, base]
+	q.visual_badge_text = "%d%% of %d coins" % [pct, base]
 	q.correct_answer = ans
-	q.prompt = "Workshop Sale! How much is %d%% off a ₱%d bundle of bricks?" % [pct, base]
-	q.expression_text = "%d%%  of  ₱%d  =  ?" % [pct, base]
+	q.prompt = "Workshop Sale! How much is %d%% off a %d-coin bundle of bricks?" % [pct, base]
+	q.expression_text = "%d%%  of  %d coins  =  ?" % [pct, base]
 	q.hint_text = "Tip: " + str(pick["tip"])
 	return q
 
@@ -212,9 +212,9 @@ static func _gen_master_percent() -> MathQuestion:
 	q.tier = 8
 	q.group_count = 1
 	q.visual_icon_path = BRICK_ICON
-	q.visual_badge_text = "%d%% of ₱%d" % [pct, base]
+	q.visual_badge_text = "%d%% of %d coins" % [pct, base]
 	q.correct_answer = ans
-	q.prompt = "Master Builder Sale! How much is %d%% off a ₱%d supply crate?" % [pct, base]
-	q.expression_text = "%d%%  of  ₱%d  =  ?" % [pct, base]
+	q.prompt = "Master Builder Sale! How much is %d%% off a %d-coin supply crate?" % [pct, base]
+	q.expression_text = "%d%%  of  %d coins  =  ?" % [pct, base]
 	q.hint_text = "Tip: " + str(pick["tip"])
 	return q

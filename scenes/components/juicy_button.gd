@@ -1,7 +1,7 @@
 # res://scenes/components/juicy_button.gd
 # Node: any Button (attach this script instead of a plain Button)
 # Reusable button with layered feedback: visual (scale bounce) + audio (sound).
-# Mouse hover moves keyboard focus, so only one button is ever highlighted.
+# Separates mouse hover from keyboard focus so buttons never stay stuck highlighted.
 class_name JuicyButton
 extends Button
 
@@ -11,12 +11,14 @@ extends Button
 @export var hover_sfx: StringName = &"hover"
 
 var _tween: Tween
+var _is_hovered: bool = false
 
 
 func _ready() -> void:
 	_update_pivot()
 	resized.connect(_update_pivot)
 	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
 	button_down.connect(_on_button_down)
@@ -27,20 +29,39 @@ func _update_pivot() -> void:
 	pivot_offset = size * 0.5
 
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and has_focus() and not _is_hovered:
+		release_focus()
+
+
 func _on_mouse_entered() -> void:
-	if not disabled and focus_mode != Control.FOCUS_NONE:
-		grab_focus()
-
-
-func _on_focus_entered() -> void:
-	# Stay quiet while a scene is fading in (e.g. the default focus on load).
+	if disabled:
+		return
+	_is_hovered = true
+	var prev_focus: Control = get_viewport().gui_get_focus_owner()
+	if prev_focus != null and prev_focus != self:
+		prev_focus.release_focus()
 	if not GameState.is_transitioning():
 		GameState.play_sfx(hover_sfx, -4.0)
 	_animate_to(hover_scale, 0.12)
 
 
-func _on_focus_exited() -> void:
+func _on_mouse_exited() -> void:
+	_is_hovered = false
+	if has_focus():
+		release_focus()
 	_animate_to(1.0, 0.12)
+
+
+func _on_focus_entered() -> void:
+	if not _is_hovered and not GameState.is_transitioning():
+		GameState.play_sfx(hover_sfx, -4.0)
+	_animate_to(hover_scale, 0.12)
+
+
+func _on_focus_exited() -> void:
+	if not _is_hovered:
+		_animate_to(1.0, 0.12)
 
 
 func _on_button_down() -> void:
@@ -49,7 +70,8 @@ func _on_button_down() -> void:
 
 func _on_pressed() -> void:
 	GameState.play_sfx(press_sfx)
-	_animate_to(hover_scale if has_focus() else 1.0, 0.18, Tween.TRANS_BACK)
+	var target: float = hover_scale if ((_is_hovered or has_focus()) and not disabled) else 1.0
+	_animate_to(target, 0.18, Tween.TRANS_BACK)
 
 
 func _animate_to(target: float, duration: float, trans: Tween.TransitionType = Tween.TRANS_SINE) -> void:

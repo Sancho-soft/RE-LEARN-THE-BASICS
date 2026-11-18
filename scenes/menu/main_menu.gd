@@ -12,7 +12,7 @@ const MASCOT_TALK: Texture2D = preload("res://assets/art/mascot_talk.svg")
 
 @onready var _coins_label: Label = %CoinsLabel
 @onready var _stars_label: Label = %StarsLabel
-@onready var _badge_icon: TextureRect = %BadgeIcon
+@onready var _badge_icon: StickerView = %BadgeIcon
 @onready var _mascot: TextureRect = %MascotTexture
 @onready var _greeting_label: Label = %GreetingLabel
 @onready var _mascot_card: PanelContainer = %MascotCard
@@ -30,6 +30,7 @@ var _greeting_index: int = 0
 
 
 func _ready() -> void:
+	GameState.set_bgm_context(&"menu")
 	_update_stats(GameState.coins, GameState.stars)
 	GameState.stats_changed.connect(_update_stats)
 	_setup_keyboard_navigation()
@@ -42,7 +43,6 @@ func _ready() -> void:
 
 	if not GameState.reduce_motion:
 		_play_entrance()
-	_play_btn.grab_focus()
 	_say_welcome()
 
 
@@ -84,8 +84,8 @@ func _update_stats(new_coins: int, new_stars: int) -> void:
 	_coins_label.text = str(new_coins)
 	_stars_label.text = str(new_stars)
 	var badge_path: String = GameState.get_sticker_icon_path(GameState.equipped_sticker)
-	if badge_path != "" and ResourceLoader.exists(badge_path):
-		_badge_icon.texture = load(badge_path) as Texture2D
+	if badge_path != "":
+		_badge_icon.setup_sticker(GameState.equipped_sticker, Vector2(42, 42), false)
 		_badge_icon.visible = true
 	else:
 		_badge_icon.visible = false

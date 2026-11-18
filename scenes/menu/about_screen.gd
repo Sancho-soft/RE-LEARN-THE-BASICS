@@ -20,7 +20,6 @@ var _creator_clicks: int = 0
 
 func _ready() -> void:
 	_back_button.pressed.connect(_go_back)
-	_back_button.grab_focus()
 	_creator1.gui_input.connect(_on_creator_gui_input)
 	_creator2.gui_input.connect(_on_creator_gui_input)
 

@@ -39,59 +39,71 @@ theme_override_constants/separation = 16
 
 [node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 12
 
-[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
+[node name="LeftSlot" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/TopBar/LeftSlot"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 text = "← Menu"
 script = ExtResource("4_juicy")
 press_sfx = &"back"
 
 [node name="TitleBanner" type="TextureRect" parent="MarginContainer/MainVBox/TopBar"]
-custom_minimum_size = Vector2(520, 96)
+custom_minimum_size = Vector2(460, 86)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
+size_flags_vertical = 4
 texture = ExtResource("7_progress_banner")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+[node name="RightSlot" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar"]
 layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
 
-[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel"]
+[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel"]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/CoinsBox"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 texture = ExtResource("5_coin")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+[node name="CoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/CoinsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0"
 
-[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StarIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+[node name="StarIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/StarsBox"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 texture = ExtResource("6_star")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StarsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+[node name="StarsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/StarsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
@@ -134,7 +146,7 @@ size_flags_horizontal = 3
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentRow/StickerPanel"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="Header" type="Label" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox"]
 layout_mode = 2
@@ -142,8 +154,9 @@ theme_override_font_sizes/font_size = 28
 text = "Sticker Shop"
 
 [node name="Subtitle" type="Label" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 18
 text = "Spend coins to unlock stickers & pin one next to Pip!"
 
 [node name="StickerGrid" type="GridContainer" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox"]
@@ -151,6 +164,37 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
-theme_override_constants/h_separation = 14
-theme_override_constants/v_separation = 14
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
 columns = 3
+
+[node name="StickerPagerRow" type="HBoxContainer" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="PrevStickerPageButton" type="Button" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox/StickerPagerRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(54, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "◀"
+script = ExtResource("4_juicy")
+press_sfx = &"toggle"
+
+[node name="StickerPageLabel" type="Label" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox/StickerPagerRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Page 1 / 2 • Cozy Stickers"
+horizontal_alignment = 1
+
+[node name="NextStickerPageButton" type="Button" parent="MarginContainer/MainVBox/ContentRow/StickerPanel/VBox/StickerPagerRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(54, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "▶"
+script = ExtResource("4_juicy")
+press_sfx = &"toggle"

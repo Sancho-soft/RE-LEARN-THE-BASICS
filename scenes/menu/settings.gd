@@ -30,7 +30,6 @@ func _ready() -> void:
 	_motion_toggle.toggled.connect(_on_motion_toggled)
 	_resolution_button.pressed.connect(_on_resolution_pressed)
 	_back_button.pressed.connect(_go_back)
-	_music_toggle.grab_focus()
 
 
 func _on_music_toggled(enabled: bool) -> void:

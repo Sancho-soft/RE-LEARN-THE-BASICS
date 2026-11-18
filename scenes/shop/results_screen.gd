@@ -14,30 +14,49 @@ const SPARKLE_TEX: Texture2D = preload("res://assets/art/sparkle.svg")
 const MASCOT_IDLE: Texture2D = preload("res://assets/art/mascot.svg")
 const MASCOT_TALK: Texture2D = preload("res://assets/art/mascot_talk.svg")
 
+@onready var _card: PanelContainer = %Card
 @onready var _mascot: TextureRect = %MascotTexture
+@onready var _equipped_sticker_view: StickerView = %EquippedStickerView
 @onready var _title_label: Label = %TitleLabel
 @onready var _mascot_speech_label: Label = %MascotSpeechLabel
 @onready var _stars_row: HBoxContainer = %StarsRow
 @onready var _coins_earned_label: Label = %CoinsEarnedLabel
 @onready var _detail_label: Label = %DetailLabel
 @onready var _totals_label: Label = %TotalsLabel
+@onready var _unlock_banner_label: Label = %UnlockBannerLabel
 
+@onready var _next_level_btn: Button = %NextLevelButton
 @onready var _play_again_btn: Button = %PlayAgainButton
 @onready var _activities_btn: Button = %ActivitiesButton
 @onready var _menu_btn: Button = %MenuButton
 
 var _activity_id: String = "little_shop"
+var _played_tier: int = 1
+var _next_tier: int = 0
 
 
 func _ready() -> void:
+	GameState.set_bgm_context(&"menu")
 	_populate_summary()
+	_next_level_btn.pressed.connect(_on_next_level)
 	_play_again_btn.pressed.connect(_on_play_again)
 	_activities_btn.pressed.connect(func() -> void: GameState.change_scene(ACTIVITIES_SCENE))
 	_menu_btn.pressed.connect(func() -> void: GameState.change_scene(MAIN_MENU_SCENE))
-	_play_again_btn.grab_focus()
+
+
+func _on_next_level() -> void:
+	if _next_tier < 1:
+		return
+	GameState.set_activity_tier(_activity_id, _next_tier, true)
+	_launch_activity()
 
 
 func _on_play_again() -> void:
+	GameState.set_activity_tier(_activity_id, _played_tier, true)
+	_launch_activity()
+
+
+func _launch_activity() -> void:
 	GameState.active_activity_id = _activity_id
 	if _activity_id == "little_shop":
 		GameState.change_scene(LITTLE_SHOP_SCENE)
@@ -58,12 +77,14 @@ func _populate_summary() -> void:
 	var clean: int = int(summary.get("clean_answers", 0))
 	var total_q: int = int(summary.get("total_questions", 8))
 	var tier: int = int(summary.get("tier_reached", GameState.get_activity_tier(_activity_id)))
+	var unlocked_next_tier: int = int(summary.get("unlocked_next_tier", 0))
+	_played_tier = tier
 
 	var is_max_tier: bool = tier >= GameState.MAX_ACTIVITY_TIER
 	var cheer_line: String = "You finished the whole round! That takes real heart!"
 	if is_max_tier:
 		_title_label.text = "%s: RAINBOW STARS!" % activity_name.to_upper()
-		cheer_line = "Amazing! You beat Max Level %d and unlocked Rainbow Stars!" % GameState.MAX_ACTIVITY_TIER
+		cheer_line = "Amazing! You beat Max Level %d and earned Rainbow Stars!" % GameState.MAX_ACTIVITY_TIER
 	else:
 		match earned_stars:
 			3:
@@ -75,15 +96,41 @@ func _populate_summary() -> void:
 			_:
 				_title_label.text = "%s COMPLETE!" % activity_name.to_upper()
 
+	if GameState.equipped_sticker != "" and GameState.get_sticker_icon_path(GameState.equipped_sticker) != "":
+		_equipped_sticker_view.visible = true
+		_equipped_sticker_view.setup_sticker(GameState.equipped_sticker, Vector2(68, 68), false, true)
+	else:
+		_equipped_sticker_view.visible = false
+
 	var talker: TalkingAvatar = TalkingAvatar.new()
 	add_child(talker)
 	talker.setup(_mascot, _mascot_speech_label, MASCOT_IDLE, MASCOT_TALK)
 	talker.say(cheer_line)
+	talker.finish_now()
 	talker.react_happy()
 
+	var level_best: int = GameState.get_level_stars(_activity_id, tier)
 	var act_stars: int = GameState.get_activity_total_stars(_activity_id)
-	_detail_label.text = "Solved %d / %d smoothly  •  %s (%d/%d ★)" % [clean, total_q, _get_tier_text(_activity_id, tier), act_stars, GameState.get_max_activity_stars()]
+	_detail_label.text = "Solved %d / %d smoothly  •  %s (Lvl Best: %d/3 ★  •  All: %d/%d ★)" % [
+		clean, total_q, _get_tier_text(_activity_id, tier), level_best, act_stars, GameState.get_max_activity_stars()
+	]
 	_totals_label.text = "Total Saved:  %d Coins   |   %d / %d Stars" % [GameState.coins, GameState.stars, GameState.get_max_total_stars()]
+
+	if unlocked_next_tier > 0:
+		_unlock_banner_label.visible = true
+		_unlock_banner_label.text = "Level %d Unlocked! Ready for a new challenge?" % unlocked_next_tier
+		_next_tier = unlocked_next_tier
+		_next_level_btn.visible = true
+		_next_level_btn.text = "Level %d →" % unlocked_next_tier
+	elif tier < GameState.MAX_ACTIVITY_TIER and GameState.is_level_unlocked(_activity_id, tier + 1):
+		_unlock_banner_label.visible = false
+		_next_tier = tier + 1
+		_next_level_btn.visible = true
+		_next_level_btn.text = "Level %d →" % _next_tier
+	else:
+		_unlock_banner_label.visible = false
+		_next_tier = 0
+		_next_level_btn.visible = false
 
 	if GameState.reduce_motion or earned_coins <= 0:
 		_coins_earned_label.text = "+%d Coins Earned!" % earned_coins
@@ -107,6 +154,16 @@ func _populate_summary() -> void:
 			tween.tween_interval(0.15 * float(i))
 			tween.tween_property(rect, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 			tween.tween_callback(_play_star_sparkle.bind(rect))
+
+	if (earned_stars == 3 or unlocked_next_tier > 0) and not GameState.reduce_motion:
+		call_deferred("_trigger_confetti")
+
+
+func _trigger_confetti() -> void:
+	if not is_inside_tree():
+		return
+	var origin: Vector2 = _card.global_position + Vector2(_card.size.x * 0.5, 90.0)
+	CelebrationFX.spawn_confetti_burst(self, origin, 22)
 
 
 func _set_coin_rollup(val: int) -> void:

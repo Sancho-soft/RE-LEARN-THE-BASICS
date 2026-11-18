@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scenes/shop/results_screen.gd" id="2_res_gd"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/ui/star_empty.svg" id="5_star_empty"]
 [ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="6_coin"]
 [ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="7_juicy"]
+[ext_resource type="Script" path="res://scenes/components/sticker_view.gd" id="8_sticker_view"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_normal"]
 content_margin_left = 24.0
@@ -78,7 +79,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Card" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(680, 0)
+unique_name_in_owner = true
+custom_minimum_size = Vector2(720, 0)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Card"]
@@ -88,12 +90,12 @@ alignment = 1
 
 [node name="TopRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 18
 alignment = 1
 
 [node name="MascotTexture" type="TextureRect" parent="CenterContainer/Card/VBoxContainer/TopRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 145)
+custom_minimum_size = Vector2(128, 132)
 layout_mode = 2
 texture = ExtResource("4_mascot")
 expand_mode = 1
@@ -101,25 +103,35 @@ stretch_mode = 5
 
 [node name="TitleBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxContainer/TopRow"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/Card/VBoxContainer/TopRow/TitleBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 38
+theme_override_font_sizes/font_size = 34
 text = "SHIFT COMPLETE!"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="MascotSpeechLabel" type="Label" parent="CenterContainer/Card/VBoxContainer/TopRow/TitleBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 0)
+custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2863, 0.3961, 0.4549, 1)
 theme_override_font_sizes/font_size = 20
 text = "Pip is cheering for you!"
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="EquippedStickerView" type="Control" parent="CenterContainer/Card/VBoxContainer/TopRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("8_sticker_view")
 
 [node name="StarsRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
 unique_name_in_owner = true
@@ -181,10 +193,29 @@ theme_override_font_sizes/font_size = 22
 text = "Total Saved:  40 Coins   |   3 Stars"
 horizontal_alignment = 1
 
+[node name="UnlockBannerLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.30, 0.88, 1)
+theme_override_font_sizes/font_size = 24
+text = "Level 2 Unlocked!"
+horizontal_alignment = 1
+
 [node name="ButtonsRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 alignment = 1
+
+[node name="NextLevelButton" type="Button" parent="CenterContainer/Card/VBoxContainer/ButtonsRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "Next Level →"
+script = ExtResource("7_juicy")
 
 [node name="PlayAgainButton" type="Button" parent="CenterContainer/Card/VBoxContainer/ButtonsRow"]
 unique_name_in_owner = true
