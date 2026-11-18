@@ -9,6 +9,7 @@ const MATH_ACTIVITY_SCENE: String = "res://scenes/play/math_activity.tscn"
 const STAR_FILLED: Texture2D = preload("res://assets/ui/star.svg")
 const STAR_RAINBOW: Texture2D = preload("res://assets/ui/star_rainbow.svg")
 const STAR_EMPTY: Texture2D = preload("res://assets/ui/star_empty.svg")
+const LOCK_ICON: Texture2D = preload("res://assets/ui/lock.svg")
 const PAGE_SIZE: int = 4
 const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_shapes", "coin_jar"]
 
@@ -85,11 +86,14 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 @onready var _play_coin_jar_btn: Button = %PlayCoinJarButton
 
 var _card_controls: Dictionary = {}
+var _viewed_tiers: Dictionary = {}
+var _level_pips: Dictionary = {}
 var _current_page: int = 0
 var _page_count: int = 2
 
 
 func _ready() -> void:
+	GameState.set_bgm_context(&"menu")
 	_coins_label.text = str(GameState.coins)
 	_stars_label.text = "%d / %d" % [GameState.stars, GameState.get_max_total_stars()]
 
@@ -173,6 +177,9 @@ func _ready() -> void:
 	_next_page_btn.pressed.connect(_change_page.bind(1))
 	for activity_id: String in _card_controls:
 		var ctrl: Dictionary = _card_controls[activity_id]
+		var highest_unlocked: int = GameState.get_highest_unlocked_tier(activity_id)
+		_viewed_tiers[activity_id] = clampi(GameState.get_activity_tier(activity_id), 1, highest_unlocked)
+		_inject_level_pips(activity_id, ctrl["play_btn"] as Button)
 		(ctrl["prev_btn"] as Button).pressed.connect(_change_activity_level.bind(activity_id, -1))
 		(ctrl["next_btn"] as Button).pressed.connect(_change_activity_level.bind(activity_id, 1))
 		(ctrl["play_btn"] as Button).pressed.connect(_launch_activity.bind(activity_id))
@@ -181,30 +188,89 @@ func _ready() -> void:
 	_page_count = maxi(1, ceili(float(_grid.get_child_count()) / float(PAGE_SIZE)))
 	_current_page = 1 if GameState.active_activity_id in PAGE_TWO_IDS else 0
 	_apply_page()
-	if _current_page == 0:
-		_play_shop_btn.grab_focus()
-	else:
-		_play_patterns_btn.grab_focus()
+
+
+func _inject_level_pips(activity_id: String, play_btn: Button) -> void:
+	var action_row: Node = play_btn.get_parent()
+	if action_row == null:
+		return
+	var card_vbox: VBoxContainer = action_row.get_parent() as VBoxContainer
+	if card_vbox == null:
+		return
+	card_vbox.add_theme_constant_override("separation", 6)
+
+	var pips_row: HBoxContainer = HBoxContainer.new()
+	pips_row.add_theme_constant_override("separation", 5)
+	pips_row.alignment = BoxContainer.ALIGNMENT_CENTER
+
+	var pip_nodes: Array[Panel] = []
+	for _lvl: int in GameState.MAX_ACTIVITY_TIER:
+		var pip: Panel = Panel.new()
+		pip.custom_minimum_size = Vector2(44, 8)
+		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pips_row.add_child(pip)
+		pip_nodes.append(pip)
+
+	card_vbox.add_child(pips_row)
+	card_vbox.move_child(pips_row, action_row.get_index())
+	_level_pips[activity_id] = pip_nodes
 
 
 func _change_activity_level(activity_id: String, delta: int) -> void:
-	var current: int = GameState.get_activity_tier(activity_id)
-	var updated: int = clampi(current + delta, 1, GameState.MAX_ACTIVITY_TIER)
+	var highest_unlocked: int = GameState.get_highest_unlocked_tier(activity_id)
+	var max_browsable: int = mini(highest_unlocked + 1, GameState.MAX_ACTIVITY_TIER)
+	var current: int = int(_viewed_tiers.get(activity_id, 1))
+	var updated: int = clampi(current + delta, 1, max_browsable)
 	if updated == current:
 		return
-	GameState.set_activity_tier(activity_id, updated, true)
+	_viewed_tiers[activity_id] = updated
+	if GameState.is_level_unlocked(activity_id, updated):
+		GameState.set_activity_tier(activity_id, updated, true)
 	_refresh_activity_level(activity_id)
 
 
 func _refresh_activity_level(activity_id: String) -> void:
 	var ctrl: Dictionary = _card_controls[activity_id]
-	var tier: int = GameState.get_activity_tier(activity_id)
-	(ctrl["tier_label"] as Label).text = _get_tier_label(activity_id, tier)
-	(ctrl["badge"] as Label).text = "Lvl %d/%d" % [tier, GameState.MAX_ACTIVITY_TIER]
+	var highest_unlocked: int = GameState.get_highest_unlocked_tier(activity_id)
+	var max_browsable: int = mini(highest_unlocked + 1, GameState.MAX_ACTIVITY_TIER)
+	var tier: int = clampi(int(_viewed_tiers.get(activity_id, 1)), 1, max_browsable)
+	_viewed_tiers[activity_id] = tier
+
+	var unlocked: bool = GameState.is_level_unlocked(activity_id, tier)
+	var tier_lbl: Label = ctrl["tier_label"] as Label
+	var badge_lbl: Label = ctrl["badge"] as Label
+	var play_btn: Button = ctrl["play_btn"] as Button
+	var stars_row: HBoxContainer = ctrl["stars_row"] as HBoxContainer
+
+	if unlocked:
+		tier_lbl.text = _get_tier_label(activity_id, tier)
+		tier_lbl.add_theme_color_override("font_color", Color(0.129412, 0.619608, 0.737255, 1.0))
+		badge_lbl.text = "Lvl %d/%d" % [tier, GameState.MAX_ACTIVITY_TIER]
+		play_btn.disabled = false
+		play_btn.icon = null
+		play_btn.text = "PLAY"
+		stars_row.modulate = Color.WHITE
+	else:
+		tier_lbl.text = "Locked • %s" % _get_tier_label(activity_id, tier)
+		tier_lbl.add_theme_color_override("font_color", Color(0.45, 0.52, 0.56, 1.0))
+		badge_lbl.text = "Locked"
+		play_btn.disabled = true
+		play_btn.icon = LOCK_ICON
+		play_btn.expand_icon = true
+		play_btn.text = "Clear Lvl %d" % (tier - 1)
+		stars_row.modulate = Color(1.0, 1.0, 1.0, 0.45)
+
 	(ctrl["prev_btn"] as Button).disabled = tier <= 1
-	(ctrl["next_btn"] as Button).disabled = tier >= GameState.MAX_ACTIVITY_TIER
+	(ctrl["next_btn"] as Button).disabled = tier >= max_browsable
+	if tier >= highest_unlocked and highest_unlocked < GameState.MAX_ACTIVITY_TIER:
+		(ctrl["next_btn"] as Button).tooltip_text = "Preview next locked level"
+	else:
+		(ctrl["next_btn"] as Button).tooltip_text = "Next level"
+
 	var is_max_tier: bool = tier == GameState.MAX_ACTIVITY_TIER
-	_populate_stars(ctrl["stars_row"] as HBoxContainer, GameState.get_level_stars(activity_id, tier), is_max_tier)
+	_populate_stars(stars_row, GameState.get_level_stars(activity_id, tier), is_max_tier)
+	_refresh_level_pips(activity_id, tier, highest_unlocked)
+
 	var act_stars_lbl: Label = ctrl["act_stars_label"] as Label
 	var total_act: int = GameState.get_activity_total_stars(activity_id)
 	var max_act: int = GameState.get_max_activity_stars()
@@ -214,6 +280,40 @@ func _refresh_activity_level(activity_id: String) -> void:
 	else:
 		act_stars_lbl.text = "All: %d/%d ★" % [total_act, max_act]
 		act_stars_lbl.add_theme_color_override("font_color", Color(0.76, 0.49, 0.04, 1.0))
+
+
+func _refresh_level_pips(activity_id: String, viewed_tier: int, highest_unlocked: int) -> void:
+	var pip_nodes: Variant = _level_pips.get(activity_id, [])
+	if not (pip_nodes is Array):
+		return
+	var pips: Array = pip_nodes as Array
+	for i: int in pips.size():
+		var pip: Panel = pips[i] as Panel
+		if pip == null:
+			continue
+		var lvl: int = i + 1
+		var lvl_stars: int = GameState.get_level_stars(activity_id, lvl)
+		var is_selected: bool = lvl == viewed_tier
+		var style: StyleBoxFlat = StyleBoxFlat.new()
+		style.corner_radius_top_left = 4
+		style.corner_radius_top_right = 4
+		style.corner_radius_bottom_right = 4
+		style.corner_radius_bottom_left = 4
+		style.border_width_left = 2 if is_selected else 1
+		style.border_width_top = 2 if is_selected else 1
+		style.border_width_right = 2 if is_selected else 1
+		style.border_width_bottom = 2 if is_selected else 1
+		style.border_color = Color(0.184314, 0.282353, 0.345098, 1.0) if is_selected else Color(0.184314, 0.282353, 0.345098, 0.45)
+
+		if lvl_stars > 0:
+			style.bg_color = Color(0.62, 0.38, 0.92, 1.0) if lvl == GameState.MAX_ACTIVITY_TIER else Color(1.0, 0.84, 0.35, 1.0)
+		elif lvl <= highest_unlocked:
+			style.bg_color = Color(0.58, 0.87, 0.96, 1.0)
+		else:
+			style.bg_color = Color(0.82, 0.85, 0.88, 1.0)
+		pip.custom_minimum_size = Vector2(46, 9)
+		pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		pip.add_theme_stylebox_override("panel", style)
 
 
 func _get_tier_label(activity_id: String, tier: int) -> String:
@@ -286,6 +386,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _launch_activity(activity_id: String) -> void:
+	var tier: int = int(_viewed_tiers.get(activity_id, 1))
+	if not GameState.is_level_unlocked(activity_id, tier):
+		return
+	GameState.set_activity_tier(activity_id, tier, true)
 	GameState.active_activity_id = activity_id
 	if activity_id == "little_shop":
 		GameState.change_scene(LITTLE_SHOP_SCENE)

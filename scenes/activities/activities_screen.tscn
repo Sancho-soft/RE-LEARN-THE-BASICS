@@ -201,69 +201,81 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 36
-theme_override_constants/margin_top = 18
+theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 36
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 14
 
 [node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 12
 
-[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
+[node name="LeftSlot" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/TopBar/LeftSlot"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 text = "← Menu"
 script = ExtResource("4_juicy")
 press_sfx = &"back"
 
 [node name="TitleBanner" type="TextureRect" parent="MarginContainer/MainVBox/TopBar"]
-custom_minimum_size = Vector2(340, 76)
+custom_minimum_size = Vector2(540, 104)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
+size_flags_vertical = 4
 texture = ExtResource("12_activities_banner")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+[node name="RightSlot" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar"]
 layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
 
-[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel"]
+[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/CoinsBox"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 texture = ExtResource("5_coin")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/CoinsBox"]
+[node name="CoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/CoinsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0"
 
-[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow"]
+[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StarIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+[node name="StarIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/StarsBox"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 texture = ExtResource("6_star")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StarsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatsPanel/StatsRow/StarsBox"]
+[node name="StarsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/StarsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
@@ -299,7 +311,7 @@ theme_override_constants/v_separation = 22
 columns = 2
 
 [node name="ShopCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -380,7 +392,7 @@ horizontal_alignment = 2
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 17
-text = "Add ₱ prices & give friendly customers their change!"
+text = "Add coin prices & give friendly customers their change!"
 autowrap_mode = 2
 
 [node name="ActionRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox"]
@@ -437,7 +449,7 @@ text = "PLAY"
 script = ExtResource("4_juicy")
 
 [node name="DoorsCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -575,7 +587,7 @@ text = "PLAY"
 script = ExtResource("4_juicy")
 
 [node name="BuilderCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -713,7 +725,7 @@ text = "PLAY"
 script = ExtResource("4_juicy")
 
 [node name="SharingCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -852,7 +864,7 @@ script = ExtResource("4_juicy")
 
 [node name="PatternsCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -991,7 +1003,7 @@ script = ExtResource("4_juicy")
 
 [node name="TimeCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -1130,7 +1142,7 @@ script = ExtResource("4_juicy")
 
 [node name="ShapesCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
@@ -1269,7 +1281,7 @@ script = ExtResource("4_juicy")
 
 [node name="CoinJarCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
 visible = false
-custom_minimum_size = Vector2(492, 204)
+custom_minimum_size = Vector2(492, 212)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 

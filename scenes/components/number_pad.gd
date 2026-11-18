@@ -9,6 +9,7 @@ signal answer_submitted(value: int)
 const MAX_DIGITS: int = 3
 
 @onready var _display_box: PanelContainer = %DisplayBox
+@onready var _unit_coin_icon: TextureRect = %UnitCoinIcon
 @onready var _display_label: Label = %DisplayLabel
 @onready var _digits_grid: GridContainer = %DigitsGrid
 @onready var _clear_btn: Button = %ClearButton
@@ -18,6 +19,9 @@ const MAX_DIGITS: int = 3
 
 var _current_text: String = ""
 var _locked: bool = false
+var _unit_prefix: String = ""
+var _unit_suffix: String = ""
+var _show_coin_icon: bool = false
 
 
 func _ready() -> void:
@@ -62,8 +66,8 @@ func backspace() -> void:
 	_refresh_display()
 
 
-func clear_input() -> void:
-	if _locked:
+func clear_input(force: bool = false) -> void:
+	if _locked and not force:
 		return
 	_current_text = ""
 	_refresh_display()
@@ -75,6 +79,12 @@ func submit_current() -> void:
 	answer_submitted.emit(int(_current_text))
 
 
+func lock_and_clear() -> void:
+	_current_text = ""
+	set_locked(true)
+	_refresh_display()
+
+
 func set_locked(locked: bool) -> void:
 	_locked = locked
 	for child: Node in _digits_grid.get_children():
@@ -84,16 +94,30 @@ func set_locked(locked: bool) -> void:
 	_submit_btn.disabled = locked or _current_text.is_empty()
 
 
+func set_unit_format(prefix: String, suffix: String = "", show_coin_icon: bool = false) -> void:
+	_unit_prefix = prefix
+	_unit_suffix = suffix
+	_show_coin_icon = show_coin_icon
+	if _unit_coin_icon != null:
+		_unit_coin_icon.visible = _show_coin_icon
+	_refresh_display()
+
+
 func _refresh_display() -> void:
-	if _current_text.is_empty():
-		_display_label.text = "₱  __"
-	else:
-		_display_label.text = "₱  %s" % _current_text
-		if not GameState.reduce_motion:
-			_display_label.pivot_offset = _display_label.size * 0.5
-			_display_label.scale = Vector2(1.08, 1.08)
-			var tween: Tween = create_tween()
-			tween.tween_property(_display_label, "scale", Vector2.ONE, 0.12).set_ease(Tween.EASE_OUT)
+	var core: String = "__" if _current_text.is_empty() else _current_text
+	var parts: PackedStringArray = []
+	if not _unit_prefix.is_empty():
+		parts.append(_unit_prefix)
+	parts.append(core)
+	if not _unit_suffix.is_empty():
+		parts.append(_unit_suffix)
+	_display_label.text = "  ".join(parts)
+
+	if not _current_text.is_empty() and not GameState.reduce_motion:
+		_display_label.pivot_offset = _display_label.size * 0.5
+		_display_label.scale = Vector2(1.08, 1.08)
+		var tween: Tween = create_tween()
+		tween.tween_property(_display_label, "scale", Vector2.ONE, 0.12).set_ease(Tween.EASE_OUT)
 	_submit_btn.disabled = _locked or _current_text.is_empty()
 
 

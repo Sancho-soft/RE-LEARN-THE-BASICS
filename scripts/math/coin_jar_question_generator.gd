@@ -54,10 +54,10 @@ static func _gen_coin_stacks() -> MathQuestion:
 	q.tier = 1
 	q.group_count = clampi(count, 1, 5)
 	q.visual_icon_path = COIN_ICON
-	q.visual_badge_text = "%d coins × ₱%d" % [count, value]
+	q.visual_badge_text = "%d coins × %d value" % [count, value]
 	q.correct_answer = count * value
-	q.prompt = "You stacked %d coins worth ₱%d each. How much money is in the stack?" % [count, value]
-	q.expression_text = "%d  ×  ₱%d  =  ?" % [count, value]
+	q.prompt = "You stacked %d coins worth %d each. How many coins is the stack worth?" % [count, value]
+	q.expression_text = "%d  ×  %d  =  ? coins" % [count, value]
 	q.hint_text = "Tip: Skip-count by %d, %d times!" % [value, count]
 	return q
 
@@ -72,11 +72,11 @@ static func _gen_mixed_coins() -> MathQuestion:
 	q.tier = 2
 	q.group_count = 2
 	q.visual_icon_path = COIN_ICON
-	q.visual_badge_text = "%d × ₱10  +  %d × ₱5" % [tens, fives]
+	q.visual_badge_text = "%d × 10-coin  +  %d × 5-coin" % [tens, fives]
 	q.correct_answer = ans
-	q.prompt = "Your jar holds %d ten-peso coins and %d five-peso coins. What is the total?" % [tens, fives]
-	q.expression_text = "(%d × ₱10) + (%d × ₱5)  =  ?" % [tens, fives]
-	q.hint_text = "Tip: %d tens = ₱%d, and %d fives = ₱%d. Add them!" % [tens, tens * 10, fives, fives * 5]
+	q.prompt = "Your jar holds %d ten-coin pieces and %d five-coin pieces. What is the total?" % [tens, fives]
+	q.expression_text = "(%d × 10) + (%d × 5)  =  ? coins" % [tens, fives]
+	q.hint_text = "Tip: %d tens = %d, and %d fives = %d. Add them!" % [tens, tens * 10, fives, fives * 5]
 	return q
 
 
@@ -92,7 +92,7 @@ static func _gen_missing_addend() -> MathQuestion:
 	q.visual_icon_path = COIN_ICON
 	q.visual_badge_text = "Find the hidden coins!"
 	q.correct_answer = mystery
-	q.prompt = "You had some coins, then added ₱%d to reach ₱%d. How much did you start with?" % [known, total]
+	q.prompt = "You had some coins, then added %d to reach %d. How many did you start with?" % [known, total]
 	q.expression_text = "?  +  %d  =  %d" % [known, total]
 	q.hint_text = "Tip: Undo + %d by subtracting: %d - %d!" % [known, total, known]
 	return q
@@ -111,7 +111,7 @@ static func _gen_balance_equation() -> MathQuestion:
 		var total: int = mult * mystery
 		q.visual_badge_text = "Equal coin bags!"
 		q.correct_answer = mystery
-		q.prompt = "%d equal coin bags hold ₱%d total. How much is in 1 bag?" % [mult, total]
+		q.prompt = "%d equal coin bags hold %d coins total. How many coins in 1 bag?" % [mult, total]
 		q.expression_text = "%d  ×  ?  =  %d" % [mult, total]
 		q.hint_text = "Tip: Divide %d ÷ %d!" % [total, mult]
 	else:
@@ -119,9 +119,9 @@ static func _gen_balance_equation() -> MathQuestion:
 		var left: int = randi_range(12, 35)
 		q.visual_badge_text = "Before spending!"
 		q.correct_answer = spent + left
-		q.prompt = "After spending ₱%d, you have ₱%d left. How much did you have before?" % [spent, left]
+		q.prompt = "After spending %d coins, you have %d left. How many did you have before?" % [spent, left]
 		q.expression_text = "?  -  %d  =  %d" % [spent, left]
-		q.hint_text = "Tip: Add the ₱%d spent back to ₱%d!" % [spent, left]
+		q.hint_text = "Tip: Add the %d spent back to %d!" % [spent, left]
 	return q
 
 
@@ -136,10 +136,10 @@ static func _gen_weekly_savings() -> MathQuestion:
 	q.tier = 5
 	q.group_count = 4
 	q.visual_icon_path = COIN_ICON
-	q.visual_badge_text = "₱%d/day × %d days + ₱%d" % [daily, days, bonus]
+	q.visual_badge_text = "%d/day × %d days + %d" % [daily, days, bonus]
 	q.correct_answer = ans
-	q.prompt = "Save ₱%d a day for %d days, plus a ₱%d bonus. Total savings?" % [daily, days, bonus]
-	q.expression_text = "%d × %d  +  %d  =  ?" % [daily, days, bonus]
+	q.prompt = "Save %d coins a day for %d days, plus a %d-coin bonus. Total savings?" % [daily, days, bonus]
+	q.expression_text = "%d × %d  +  %d  =  ? coins" % [daily, days, bonus]
 	q.hint_text = "Tip: First multiply %d × %d = %d, then add %d!" % [daily, days, daily * days, bonus]
 	return q
 
@@ -157,9 +157,9 @@ static func _gen_two_step_mystery() -> MathQuestion:
 	q.visual_icon_path = COIN_ICON
 	q.visual_badge_text = "Work backwards!"
 	q.correct_answer = mystery
-	q.prompt = "%d equal jars plus ₱%d loose coins equal ₱%d. How much is in each jar?" % [mult, extra, total]
+	q.prompt = "%d equal jars plus %d loose coins equal %d coins. How many in each jar?" % [mult, extra, total]
 	q.expression_text = "%d × ?  +  %d  =  %d" % [mult, extra, total]
-	q.hint_text = "Tip: Subtract the loose ₱%d first (%d - %d = %d), then divide by %d!" % [
+	q.hint_text = "Tip: Subtract the loose %d first (%d - %d = %d), then divide by %d!" % [
 		extra, total, extra, total - extra, mult
 	]
 	return q

@@ -10,11 +10,15 @@ const FADE_COLOR: Color = Color(0.184314, 0.282353, 0.345098, 1.0) # Dark teal #
 const FADE_DURATION: float = 0.18
 
 const BGM_PATH: String = "res://assets/audio/bgm_cozy.mp3"
+const ACTIVITY_BGM_PATH: String = "res://assets/audio/bgm_activity.mp3"
 const RARE_BGM_PATH: String = "res://scenes/menu/re-learn the basics main theme (Secret).mp3"
 const BGM_BASE_DB: float = -10.0
+const BGM_ACTIVITY_DB: float = -16.5
 const BGM_DUCK_DB: float = -16.0
+const BGM_ACTIVITY_DUCK_DB: float = -22.5
 const BGM_SILENT_DB: float = -80.0
 const BGM_FADE_DURATION: float = 0.8
+const BGM_SWITCH_DURATION: float = 0.45
 
 const SFX_PATHS: Dictionary = {
 	&"hover": "res://assets/audio/ui_hover.wav",
@@ -31,12 +35,18 @@ const SFX_VOICES: int = 4
 const SFX_PITCH_VARIATION: float = 0.05
 
 const STICKER_CATALOG: Array[Dictionary] = [
-	{"id": "sprout", "name": "Sprout", "cost": 15, "icon": "res://assets/art/stickers/sticker_sprout.svg"},
-	{"id": "cat", "name": "Cozy Kitty", "cost": 25, "icon": "res://assets/art/stickers/sticker_cat.svg"},
-	{"id": "rainbow", "name": "Rainbow", "cost": 35, "icon": "res://assets/art/stickers/sticker_rainbow.svg"},
-	{"id": "rocket", "name": "Rocket", "cost": 45, "icon": "res://assets/art/stickers/sticker_rocket.svg"},
-	{"id": "crown", "name": "Gold Crown", "cost": 60, "icon": "res://assets/art/stickers/sticker_crown.svg"},
-	{"id": "trophy", "name": "Math Trophy", "cost": 80, "icon": "res://assets/art/stickers/sticker_trophy.svg"},
+	{"id": "sprout", "name": "Sprout", "cost": 15, "icon": "res://assets/art/stickers/sticker_sprout.svg", "animated": false},
+	{"id": "cat", "name": "Cozy Kitty", "cost": 25, "icon": "res://assets/art/stickers/sticker_cat.svg", "animated": false},
+	{"id": "rainbow", "name": "Rainbow", "cost": 35, "icon": "res://assets/art/stickers/sticker_rainbow.svg", "animated": false},
+	{"id": "rocket", "name": "Rocket", "cost": 45, "icon": "res://assets/art/stickers/sticker_rocket.svg", "animated": false},
+	{"id": "crown", "name": "Gold Crown", "cost": 60, "icon": "res://assets/art/stickers/sticker_crown.svg", "animated": false},
+	{"id": "trophy", "name": "Math Trophy", "cost": 80, "icon": "res://assets/art/stickers/sticker_trophy.svg", "animated": false},
+	{"id": "dino", "name": "Happy Dino", "cost": 95, "icon": "res://assets/art/stickers/sticker_dino.svg", "animated": false},
+	{"id": "unicorn", "name": "Star Unicorn", "cost": 115, "icon": "res://assets/art/stickers/sticker_unicorn.svg", "animated": false},
+	{"id": "panda", "name": "Cozy Panda", "cost": 135, "icon": "res://assets/art/stickers/sticker_panda.svg", "animated": false},
+	{"id": "shooting_star", "name": "Comet Star", "cost": 180, "icon": "res://assets/art/stickers/sticker_shooting_star.svg", "animated": true, "anim_style": "comet"},
+	{"id": "dragon", "name": "Galaxy Dragon", "cost": 240, "icon": "res://assets/art/stickers/sticker_dragon.svg", "animated": true, "anim_style": "float"},
+	{"id": "prism_owl", "name": "Prism Owl", "cost": 320, "icon": "res://assets/art/stickers/sticker_prism_owl.svg", "animated": true, "anim_style": "rainbow"},
 ]
 
 const RESOLUTION_PRESETS: Array[Dictionary] = [
@@ -101,8 +111,12 @@ var _bgm_player: AudioStreamPlayer
 var _duck_tween: Tween
 var _bgm_fade_tween: Tween
 var _is_fading_bgm: bool = false
+var _bgm_context: StringName = &"menu"
 var _is_rare_theme_active: bool = false
+var _menu_bgm_stream: AudioStream
+var _activity_bgm_stream: AudioStream
 var _rare_bgm_stream: AudioStream
+var _texture_cache: Dictionary = {}
 
 var _sfx_streams: Dictionary = {}
 var _sfx_players: Array[AudioStreamPlayer] = []
@@ -166,25 +180,102 @@ func _setup_bgm() -> void:
 	_bgm_player.volume_db = _get_bgm_target_db()
 	add_child(_bgm_player)
 
-	var stream: AudioStream = _load_bgm_stream(BGM_PATH)
-	if stream != null:
-		_bgm_player.stream = stream
+	_menu_bgm_stream = _load_bgm_stream(BGM_PATH)
+	_activity_bgm_stream = _load_bgm_stream(ACTIVITY_BGM_PATH)
+	if _menu_bgm_stream != null:
+		_bgm_player.stream = _menu_bgm_stream
 		if music_enabled:
 			_bgm_player.play()
 	else:
 		push_warning("GameState: Missing BGM at %s" % BGM_PATH)
 
 
+func _get_bgm_base_db() -> float:
+	return BGM_ACTIVITY_DB if _bgm_context == &"activity" else BGM_BASE_DB
+
+
 func _get_bgm_target_db() -> float:
 	if bgm_volume_percent <= 0:
 		return BGM_SILENT_DB
-	return maxf(BGM_BASE_DB + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB)
+	return maxf(_get_bgm_base_db() + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB)
 
 
 func _get_bgm_duck_db() -> float:
 	if bgm_volume_percent <= 0:
 		return BGM_SILENT_DB
-	return maxf(BGM_DUCK_DB + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB)
+	var duck_base: float = BGM_ACTIVITY_DUCK_DB if _bgm_context == &"activity" else BGM_DUCK_DB
+	return maxf(duck_base + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB)
+
+
+func _get_stream_for_context(context: StringName) -> AudioStream:
+	if _is_rare_theme_active:
+		var rare_stream: AudioStream = _load_rare_bgm()
+		if rare_stream != null:
+			return rare_stream
+	if context == &"activity":
+		if _activity_bgm_stream == null:
+			_activity_bgm_stream = _load_bgm_stream(ACTIVITY_BGM_PATH)
+		if _activity_bgm_stream != null:
+			return _activity_bgm_stream
+	if _menu_bgm_stream == null:
+		_menu_bgm_stream = _load_bgm_stream(BGM_PATH)
+	return _menu_bgm_stream
+
+
+func set_bgm_context(context: StringName) -> void:
+	if _bgm_context == context:
+		return
+	_bgm_context = context
+	if _bgm_player == null:
+		return
+
+	var target_stream: AudioStream = _get_stream_for_context(context)
+	var target_db: float = _get_bgm_target_db()
+
+	if _duck_tween != null and _duck_tween.is_valid():
+		_duck_tween.kill()
+	if _bgm_fade_tween != null and _bgm_fade_tween.is_valid():
+		_bgm_fade_tween.kill()
+	_is_fading_bgm = false
+
+	if not music_enabled:
+		if target_stream != null and _bgm_player.stream != target_stream:
+			_bgm_player.stream = target_stream
+		_bgm_player.volume_db = target_db
+		return
+
+	if target_stream == null:
+		return
+
+	# Same stream (e.g. secret rare theme active): just smoothly adjust volume for gameplay focus.
+	if _bgm_player.stream == target_stream and _bgm_player.playing:
+		var vol_time: float = 0.25 if reduce_motion else BGM_SWITCH_DURATION
+		_is_fading_bgm = true
+		_bgm_fade_tween = create_tween()
+		_bgm_fade_tween.tween_property(_bgm_player, "volume_db", target_db, vol_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_bgm_fade_tween.tween_callback(func() -> void: _is_fading_bgm = false)
+		return
+
+	var fade_time: float = 0.22 if reduce_motion else BGM_SWITCH_DURATION
+	_is_fading_bgm = true
+	_bgm_fade_tween = create_tween()
+	if _bgm_player.playing:
+		_bgm_fade_tween.tween_property(_bgm_player, "volume_db", BGM_SILENT_DB, fade_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		_bgm_fade_tween.tween_callback(_switch_bgm_stream.bind(target_stream))
+	else:
+		_switch_bgm_stream(target_stream)
+	_bgm_fade_tween.tween_property(_bgm_player, "volume_db", target_db, fade_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_bgm_fade_tween.tween_callback(func() -> void: _is_fading_bgm = false)
+
+
+func _switch_bgm_stream(target_stream: AudioStream) -> void:
+	if _bgm_player == null:
+		return
+	_bgm_player.stop()
+	_bgm_player.stream = target_stream
+	_bgm_player.volume_db = BGM_SILENT_DB
+	if music_enabled:
+		_bgm_player.play()
 
 
 func _duck_bgm(hold_sec: float = 0.35) -> void:
@@ -314,11 +405,10 @@ func set_music_enabled(enabled: bool) -> void:
 		if _bgm_fade_tween != null and _bgm_fade_tween.is_valid():
 			_bgm_fade_tween.kill()
 		_is_fading_bgm = false
-		if _is_rare_theme_active:
-			var rare_stream: AudioStream = _load_rare_bgm()
-			if rare_stream != null and _bgm_player.stream != rare_stream:
-				_bgm_player.stop()
-				_bgm_player.stream = rare_stream
+		var expected_stream: AudioStream = _get_stream_for_context(_bgm_context)
+		if expected_stream != null and _bgm_player.stream != expected_stream:
+			_bgm_player.stop()
+			_bgm_player.stream = expected_stream
 		if music_enabled and _bgm_player.stream != null and not _bgm_player.playing:
 			_bgm_player.volume_db = _get_bgm_target_db()
 			_bgm_player.play()
@@ -385,12 +475,35 @@ func _apply_display_settings() -> void:
 
 # ---------------------------------------------------------------- Progress & Stickers
 
+func get_highest_unlocked_tier(activity_id: String) -> int:
+	var highest: int = 1
+	for t: int in range(2, MAX_ACTIVITY_TIER + 1):
+		if get_level_stars(activity_id, t - 1) > 0 or get_level_stars(activity_id, t) > 0:
+			highest = t
+		else:
+			break
+	# Also preserve access if a legacy save already has stars on a higher tier.
+	for t: int in range(MAX_ACTIVITY_TIER, highest, -1):
+		if get_level_stars(activity_id, t) > 0:
+			highest = t
+			break
+	return clampi(highest, 1, MAX_ACTIVITY_TIER)
+
+
+func is_level_unlocked(activity_id: String, tier: int) -> bool:
+	if tier <= 1:
+		return true
+	return clampi(tier, 1, MAX_ACTIVITY_TIER) <= get_highest_unlocked_tier(activity_id)
+
+
 func get_activity_tier(activity_id: String) -> int:
-	return clampi(int(activity_tiers.get(activity_id, 1)), 1, MAX_ACTIVITY_TIER)
+	var unlocked: int = get_highest_unlocked_tier(activity_id)
+	return clampi(int(activity_tiers.get(activity_id, 1)), 1, unlocked)
 
 
 func set_activity_tier(activity_id: String, tier: int, persist: bool = false) -> void:
-	activity_tiers[activity_id] = clampi(tier, 1, MAX_ACTIVITY_TIER)
+	var unlocked: int = get_highest_unlocked_tier(activity_id)
+	activity_tiers[activity_id] = clampi(tier, 1, unlocked)
 	if persist:
 		save_game()
 
@@ -497,11 +610,44 @@ func equip_sticker(sticker_id: String) -> void:
 		stats_changed.emit(coins, stars)
 
 
-func get_sticker_icon_path(sticker_id: String) -> String:
+func get_sticker_info(sticker_id: String) -> Dictionary:
 	for item: Dictionary in STICKER_CATALOG:
 		if str(item["id"]) == sticker_id:
-			return str(item["icon"])
-	return ""
+			return item
+	return {}
+
+
+func is_sticker_animated(sticker_id: String) -> bool:
+	var item: Dictionary = get_sticker_info(sticker_id)
+	return bool(item.get("animated", false))
+
+
+func get_sticker_icon_path(sticker_id: String) -> String:
+	var item: Dictionary = get_sticker_info(sticker_id)
+	return str(item.get("icon", ""))
+
+
+func load_texture_safe(path: String) -> Texture2D:
+	if path.is_empty():
+		return null
+	if _texture_cache.has(path):
+		return _texture_cache[path] as Texture2D
+	var tex: Texture2D = null
+	if ResourceLoader.exists(path):
+		tex = load(path) as Texture2D
+	if tex == null and path.to_lower().ends_with(".svg") and FileAccess.file_exists(path):
+		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
+		if not bytes.is_empty():
+			var img: Image = Image.new()
+			if img.load_svg_from_buffer(bytes, 2.0) == OK:
+				tex = ImageTexture.create_from_image(img)
+	elif tex == null and FileAccess.file_exists(path):
+		var img: Image = Image.load_from_file(path)
+		if img != null:
+			tex = ImageTexture.create_from_image(img)
+	if tex != null:
+		_texture_cache[path] = tex
+	return tex
 
 
 func _ensure_activity_level_dict(activity_id: String) -> Dictionary:
@@ -579,7 +725,7 @@ func load_game() -> void:
 			var act_id: String = str(act_key)
 			var legacy_stars: int = clampi(int(activity_stars.get(act_id, 0)), 0, 3)
 			if legacy_stars > 0:
-				var tier_num: int = get_activity_tier(act_id)
+				var tier_num: int = clampi(int(activity_tiers.get(act_id, 1)), 1, MAX_ACTIVITY_TIER)
 				activity_level_stars[act_id] = {tier_num: legacy_stars}
 
 	var loaded_stickers: Variant = config.get_value("progress", "unlocked_stickers", [])
@@ -595,3 +741,6 @@ func load_game() -> void:
 	reduce_motion = bool(config.get_value("settings", "reduce_motion", false))
 	resolution_index = clampi(int(config.get_value("settings", "resolution_index", 0)), 0, RESOLUTION_PRESETS.size() - 1)
 	_recalculate_total_stars()
+	for act_key: Variant in activity_tiers.keys():
+		var act_id: String = str(act_key)
+		activity_tiers[act_id] = clampi(int(activity_tiers[act_id]), 1, get_highest_unlocked_tier(act_id))

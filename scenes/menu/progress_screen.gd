@@ -1,26 +1,38 @@
 # res://scenes/menu/progress_screen.gd
 # Node: ProgressScreen (Control)
-# Displays lifetime math mastery across all 4 activities + Sticker Shop coin sink.
+# Displays lifetime math mastery across all 8 activities + Sticker Shop coin sink.
 extends Control
 
 const MAIN_MENU_SCENE: String = "res://scenes/menu/main_menu.tscn"
 const JUICY_BUTTON_SCRIPT: Script = preload("res://scenes/components/juicy_button.gd")
 const STAR_FILLED: Texture2D = preload("res://assets/ui/star.svg")
 const STAR_RAINBOW: Texture2D = preload("res://assets/ui/star_rainbow.svg")
+const COIN_ICON: Texture2D = preload("res://assets/ui/coin.svg")
+const STICKERS_PER_PAGE: int = 6
 
 @onready var _back_btn: Button = %BackButton
 @onready var _coins_label: Label = %CoinsLabel
 @onready var _stars_label: Label = %StarsLabel
 @onready var _solved_label: Label = %SolvedLabel
 @onready var _mastery_list: VBoxContainer = %MasteryList
+@onready var _subtitle_label: Label = %Subtitle
 @onready var _sticker_grid: GridContainer = %StickerGrid
+@onready var _prev_sticker_btn: Button = %PrevStickerPageButton
+@onready var _sticker_page_label: Label = %StickerPageLabel
+@onready var _next_sticker_btn: Button = %NextStickerPageButton
+
+var _sticker_page: int = 0
+var _sticker_page_count: int = 2
 
 
 func _ready() -> void:
+	GameState.set_bgm_context(&"menu")
+	_sticker_page_count = maxi(1, ceili(float(GameState.STICKER_CATALOG.size()) / float(STICKERS_PER_PAGE)))
 	_back_btn.pressed.connect(_go_back)
+	_prev_sticker_btn.pressed.connect(_change_sticker_page.bind(-1))
+	_next_sticker_btn.pressed.connect(_change_sticker_page.bind(1))
 	GameState.stats_changed.connect(_on_stats_changed)
 	_refresh_all()
-	_back_btn.grab_focus()
 
 
 func _on_stats_changed(_c: int, _s: int) -> void:
@@ -31,7 +43,18 @@ func _refresh_all() -> void:
 	_coins_label.text = str(GameState.coins)
 	_stars_label.text = "%d / %d" % [GameState.stars, GameState.get_max_total_stars()]
 	_solved_label.text = "Questions Solved: %d" % GameState.total_solved
+	_subtitle_label.text = "Collected %d / %d stickers • Pin one next to Pip!" % [
+		GameState.unlocked_stickers.size(), GameState.STICKER_CATALOG.size()
+	]
 	_rebuild_mastery_list()
+	_rebuild_sticker_grid()
+
+
+func _change_sticker_page(delta: int) -> void:
+	var updated: int = clampi(_sticker_page + delta, 0, _sticker_page_count - 1)
+	if updated == _sticker_page:
+		return
+	_sticker_page = updated
 	_rebuild_sticker_grid()
 
 
@@ -117,38 +140,70 @@ func _rebuild_sticker_grid() -> void:
 	for child: Node in _sticker_grid.get_children():
 		child.queue_free()
 
-	for item: Dictionary in GameState.STICKER_CATALOG:
+	var total_items: int = GameState.STICKER_CATALOG.size()
+	var start_idx: int = _sticker_page * STICKERS_PER_PAGE
+	var end_idx: int = mini(total_items, start_idx + STICKERS_PER_PAGE)
+
+	_prev_sticker_btn.disabled = _sticker_page <= 0
+	_next_sticker_btn.disabled = _sticker_page >= _sticker_page_count - 1
+	var page_theme: String = "Cozy Stickers" if _sticker_page == 0 else "Deluxe & Animated"
+	_sticker_page_label.text = "Page %d / %d • %s" % [_sticker_page + 1, _sticker_page_count, page_theme]
+
+	for idx: int in range(start_idx, end_idx):
+		var item: Dictionary = GameState.STICKER_CATALOG[idx]
 		var sid: String = str(item["id"])
 		var sname: String = str(item["name"])
 		var cost: int = int(item["cost"])
-		var icon_path: String = str(item["icon"])
+		var is_animated: bool = bool(item.get("animated", false))
 		var unlocked: bool = sid in GameState.unlocked_stickers
 		var equipped: bool = GameState.equipped_sticker == sid
 
 		var card: PanelContainer = PanelContainer.new()
-		card.custom_minimum_size = Vector2(180, 185)
+		card.custom_minimum_size = Vector2(174, 174)
+		var card_style: StyleBoxFlat = StyleBoxFlat.new()
+		card_style.content_margin_left = 10.0
+		card_style.content_margin_top = 8.0
+		card_style.content_margin_right = 10.0
+		card_style.content_margin_bottom = 8.0
+		card_style.bg_color = Color(0.96, 0.92, 1.0, 1.0) if is_animated else Color(1.0, 0.985, 0.94, 1.0)
+		card_style.border_width_left = 4
+		card_style.border_width_top = 4
+		card_style.border_width_right = 4
+		card_style.border_width_bottom = 6
+		card_style.border_color = Color(0.55, 0.30, 0.88, 1.0) if is_animated else Color(0.184314, 0.282353, 0.345098, 1.0)
+		card_style.corner_radius_top_left = 20
+		card_style.corner_radius_top_right = 20
+		card_style.corner_radius_bottom_right = 20
+		card_style.corner_radius_bottom_left = 20
+		card.add_theme_stylebox_override("panel", card_style)
 
 		var vbox: VBoxContainer = VBoxContainer.new()
 		vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-		vbox.add_theme_constant_override("separation", 8)
+		vbox.add_theme_constant_override("separation", 4)
 
-		var icon: TextureRect = TextureRect.new()
-		icon.custom_minimum_size = Vector2(68, 68)
-		icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		icon.texture = load(icon_path) as Texture2D
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		if not unlocked:
-			icon.modulate = Color(0.75, 0.78, 0.82, 0.7)
+		var badge_lbl: Label = Label.new()
+		badge_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		badge_lbl.add_theme_font_size_override("font_size", 12)
+		if is_animated:
+			badge_lbl.text = "ANIMATED"
+			badge_lbl.add_theme_color_override("font_color", Color(0.55, 0.30, 0.88, 1.0))
+		else:
+			badge_lbl.text = "STICKER"
+			badge_lbl.add_theme_color_override("font_color", Color(0.32, 0.42, 0.48, 0.7))
+
+		var icon_view: StickerView = StickerView.new()
+		vbox.add_child(badge_lbl)
+		vbox.add_child(icon_view)
+		icon_view.setup_sticker(sid, Vector2(56, 56), not unlocked, equipped)
 
 		var name_lbl: Label = Label.new()
 		name_lbl.text = sname
 		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		name_lbl.add_theme_font_size_override("font_size", 19)
+		name_lbl.add_theme_font_size_override("font_size", 17)
 
 		var btn: Button = Button.new()
 		btn.set_script(JUICY_BUTTON_SCRIPT)
-		btn.add_theme_font_size_override("font_size", 18)
+		btn.add_theme_font_size_override("font_size", 16)
 
 		if equipped:
 			btn.text = "Pinned ★"
@@ -157,13 +212,24 @@ func _rebuild_sticker_grid() -> void:
 			btn.text = "Pin Badge"
 			btn.pressed.connect(_on_equip_sticker.bind(sid))
 		elif GameState.coins >= cost:
-			btn.text = "Buy ₱%d" % cost
+			btn.icon = COIN_ICON
+			btn.expand_icon = true
+			btn.text = "Buy %d" % cost
 			btn.pressed.connect(_on_buy_sticker.bind(sid))
 		else:
-			btn.text = "₱%d" % cost
+			btn.icon = COIN_ICON
+			btn.expand_icon = true
+			btn.text = "%d" % cost
 			btn.disabled = true
 
-		vbox.add_child(icon)
+		if is_animated and not equipped:
+			card.mouse_entered.connect(func() -> void: icon_view.set_anim_active(true))
+			card.mouse_exited.connect(func() -> void: icon_view.set_anim_active(false))
+			btn.mouse_entered.connect(func() -> void: icon_view.set_anim_active(true))
+			btn.mouse_exited.connect(func() -> void: icon_view.set_anim_active(false))
+			btn.focus_entered.connect(func() -> void: icon_view.set_anim_active(true))
+			btn.focus_exited.connect(func() -> void: icon_view.set_anim_active(false))
+
 		vbox.add_child(name_lbl)
 		vbox.add_child(btn)
 		card.add_child(vbox)

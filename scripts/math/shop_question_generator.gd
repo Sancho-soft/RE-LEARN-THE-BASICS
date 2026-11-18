@@ -84,7 +84,7 @@ static func _gen_addition_to_10() -> MathQuestion:
 	q.right_icon_path = str(pair[1]["icon"])
 	q.correct_answer = a + b
 	q.prompt = "May I buy a %s and a %s, please?" % [q.left_label, q.right_label]
-	q.expression_text = "₱%d  +  ₱%d  =  ?" % [a, b]
+	q.expression_text = "%d  +  %d  =  ? coins" % [a, b]
 
 	var big: int = maxi(a, b)
 	var small: int = mini(a, b)
@@ -111,7 +111,7 @@ static func _gen_addition_to_20(tier_override: int = 2) -> MathQuestion:
 	q.right_icon_path = str(pair[1]["icon"])
 	q.correct_answer = a + b
 	q.prompt = "I'd love a %s and a %s! What's my total?" % [q.left_label, q.right_label]
-	q.expression_text = "₱%d  +  ₱%d  =  ?" % [a, b]
+	q.expression_text = "%d  +  %d  =  ? coins" % [a, b]
 
 	var big: int = maxi(a, b)
 	var small: int = mini(a, b)
@@ -140,7 +140,7 @@ static func _gen_addition_to_100() -> MathQuestion:
 	q.right_icon_path = str(pair[1]["icon"])
 	q.correct_answer = a + b
 	q.prompt = "Two big items today: %s and %s! How much altogether?" % [q.left_label, q.right_label]
-	q.expression_text = "₱%d  +  ₱%d  =  ?" % [a, b]
+	q.expression_text = "%d  +  %d  =  ? coins" % [a, b]
 
 	var tens_a: int = (a / 10) * 10
 	var ones_a: int = a % 10
@@ -174,8 +174,8 @@ static func _gen_subtraction_change(max_paid: int) -> MathQuestion:
 	q.left_price = price
 	q.left_icon_path = str(pair[0]["icon"])
 	q.correct_answer = paid - price
-	q.prompt = "Here is ₱%d for the %s (₱%d). What's my change?" % [paid, q.left_label, price]
-	q.expression_text = "₱%d  -  ₱%d  =  ?" % [paid, price]
+	q.prompt = "Here are %d coins for the %s (%d coins). What's my change?" % [paid, q.left_label, price]
+	q.expression_text = "%d  -  %d  =  ? coins" % [paid, price]
 
 	if paid <= 20:
 		q.hint_text = "Tip: Start at %d and count up until you reach %d!" % [price, paid]
@@ -203,7 +203,7 @@ static func _gen_addition_range(tier_num: int, min_a: int, max_a: int, min_b: in
 	q.right_icon_path = str(pair[1]["icon"])
 	q.correct_answer = a + b
 	q.prompt = "A big order of %s and %s! What is the total?" % [q.left_label, q.right_label]
-	q.expression_text = "₱%d  +  ₱%d  =  ?" % [a, b]
+	q.expression_text = "%d  +  %d  =  ? coins" % [a, b]
 
 	var h_a: int = (a / 100) * 100
 	var h_b: int = (b / 100) * 100
@@ -226,8 +226,8 @@ static func _gen_subtraction_budgets(tier_num: int, budgets: Array[int], min_pri
 	q.left_price = price
 	q.left_icon_path = str(pair[0]["icon"])
 	q.correct_answer = paid - price
-	q.prompt = "Here is ₱%d for the %s (₱%d). What's my change?" % [paid, q.left_label, price]
-	q.expression_text = "₱%d  -  ₱%d  =  ?" % [paid, price]
+	q.prompt = "Here are %d coins for the %s (%d coins). What's my change?" % [paid, q.left_label, price]
+	q.expression_text = "%d  -  %d  =  ? coins" % [paid, price]
 
 	var next_hundred: int = ((price / 100) + 1) * 100
 	if next_hundred < paid:

@@ -46,7 +46,7 @@ grow_vertical = 2
 
 [node name="Card" type="PanelContainer" parent="CenterContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(680, 0)
+custom_minimum_size = Vector2(760, 0)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Card"]
@@ -92,32 +92,64 @@ autowrap_mode = 2
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_creators")
 
-[node name="CreatorsVBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel"]
+[node name="CreditsRow" type="HBoxContainer" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 24
 alignment = 1
 
-[node name="CreatorsHeader" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreatorsVBox"]
+[node name="CreatorsVBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="CreatorsHeader" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/CreatorsVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2863, 0.3961, 0.4549, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "CREATORS"
 horizontal_alignment = 1
 
-[node name="Creator1" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreatorsVBox"]
+[node name="Creator1" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/CreatorsVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 25
 text = "TOM ARIZOBAL"
 horizontal_alignment = 1
 
-[node name="Creator2" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreatorsVBox"]
+[node name="Creator2" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/CreatorsVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 25
 text = "ALDREN LOUIE REYES"
+horizontal_alignment = 1
+
+[node name="CreditsDivider" type="ColorRect" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow"]
+custom_minimum_size = Vector2(3, 86)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.184314, 0.282353, 0.345098, 0.22)
+
+[node name="TestersVBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="TestersHeader" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/TestersVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2863, 0.3961, 0.4549, 1)
+theme_override_font_sizes/font_size = 20
+text = "TESTERS"
+horizontal_alignment = 1
+
+[node name="Tester1" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/TestersVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "ALEX ANDREW BENIGA"
 horizontal_alignment = 1
 
 [node name="SpeechLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]

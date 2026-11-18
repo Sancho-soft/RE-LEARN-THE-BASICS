@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scenes/menu/main_menu.gd" id="2_menu_gd"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/mascot.svg" id="6_mascot"]
 [ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="7_juicy"]
 [ext_resource type="Texture2D" path="res://assets/art/title_logo.png" id="8_title_logo"]
+[ext_resource type="Script" path="res://scenes/components/sticker_view.gd" id="9_sticker_view"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play_normal"]
 content_margin_left = 24.0
@@ -105,6 +106,22 @@ corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_version_pill"]
+content_margin_left = 16.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 0.972549, 0.905882, 0.9)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -186,13 +203,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "0"
 
-[node name="BadgeIcon" type="TextureRect" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow"]
+[node name="BadgeIcon" type="Control" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn/StatsPanel/StatsRow"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(38, 38)
+custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
+script = ExtResource("9_sticker_view")
 
 [node name="MascotCard" type="PanelContainer" parent="MarginContainer/CenterContainer/ContentRow/MascotColumn"]
 unique_name_in_owner = true
@@ -292,3 +308,27 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_quit_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_quit_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_quit_pressed")
 text = "QUIT"
+
+[node name="VersionPill" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -148.0
+offset_top = -54.0
+offset_right = -24.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_version_pill")
+
+[node name="VersionLabel" type="Label" parent="VersionPill"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.184314, 0.282353, 0.345098, 0.85)
+theme_override_font_sizes/font_size = 18
+text = "Alpha 0.11"
+horizontal_alignment = 1
+vertical_alignment = 1
