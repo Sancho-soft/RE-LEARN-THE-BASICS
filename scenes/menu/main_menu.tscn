@@ -242,16 +242,16 @@ autowrap_mode = 2
 
 [node name="MenuPanel" type="PanelContainer" parent="MarginContainer/CenterContainer/ContentRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
 size_flags_vertical = 4
 
 [node name="MenuButtons" type="VBoxContainer" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="MenuHeader" type="TextureRect" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
-custom_minimum_size = Vector2(320, 126)
+custom_minimum_size = Vector2(300, 112)
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("8_title_logo")
@@ -259,7 +259,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Spacer" type="Control" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
-custom_minimum_size = Vector2(0, 4)
+custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 
 [node name="PlayButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
@@ -271,17 +271,18 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
 text = "PLAY"
 
-[node name="ActivitiesButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
+[node name="ChallengesButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("7_juicy")
-text = "ACTIVITIES"
+text = "CHALLENGES"
 
 [node name="ProgressButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 20
 script = ExtResource("7_juicy")
-text = "PROGRESS"
+text = "PROGRESS & STICKER SHOP"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/CenterContainer/ContentRow/MenuPanel/MenuButtons"]
 unique_name_in_owner = true
@@ -329,6 +330,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_version_pill")
 layout_mode = 2
 theme_override_colors/font_color = Color(0.184314, 0.282353, 0.345098, 0.85)
 theme_override_font_sizes/font_size = 18
-text = "Alpha 0.11"
+text = "Alpha 0.12"
 horizontal_alignment = 1
 vertical_alignment = 1

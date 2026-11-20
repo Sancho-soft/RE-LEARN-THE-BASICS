@@ -135,21 +135,42 @@ color = Color(0.184314, 0.282353, 0.345098, 0.22)
 [node name="TestersVBox" type="VBoxContainer" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="TestersHeader" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/TestersVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2863, 0.3961, 0.4549, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "TESTERS"
 horizontal_alignment = 1
 
 [node name="Tester1" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/TestersVBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 21
 text = "ALEX ANDREW BENIGA"
+horizontal_alignment = 1
+
+[node name="Tester2" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/TestersVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 21
+text = "JOHN DAVID OQUINDO"
+horizontal_alignment = 1
+
+[node name="TesterCompletedHeader" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/TestersVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.30, 0.88, 1)
+theme_override_font_sizes/font_size = 14
+text = "TESTER / COMPLETED GAME"
+horizontal_alignment = 1
+
+[node name="Tester3" type="Label" parent="CenterContainer/Card/VBoxContainer/CreatorsPanel/CreditsRow/TestersVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 21
+text = "JOHN BENEDIC FUENTES DUTARO"
 horizontal_alignment = 1
 
 [node name="SpeechLabel" type="Label" parent="CenterContainer/Card/VBoxContainer"]

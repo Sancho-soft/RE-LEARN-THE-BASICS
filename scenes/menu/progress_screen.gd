@@ -62,6 +62,7 @@ func _rebuild_mastery_list() -> void:
 	for child: Node in _mastery_list.get_children():
 		child.queue_free()
 
+	_mastery_list.add_theme_constant_override("separation", 3)
 	var activities: Array[Dictionary] = [
 		{"id": "little_shop", "name": "1. The Little Shop"},
 		{"id": "puzzle_doors", "name": "2. Puzzle Doors"},
@@ -71,6 +72,8 @@ func _rebuild_mastery_list() -> void:
 		{"id": "clock_time", "name": "6. Clock & Time"},
 		{"id": "rocket_shapes", "name": "7. Rocket Shapes"},
 		{"id": "coin_jar", "name": "8. Coin Jar"},
+		{"id": "balance_scale", "name": "9. Balance Scale"},
+		{"id": "number_forge", "name": "10. Number Forge"},
 	]
 
 	for act: Dictionary in activities:
@@ -89,11 +92,11 @@ func _rebuild_mastery_list() -> void:
 
 		var title: Label = Label.new()
 		title.text = str(act["name"])
-		title.add_theme_font_size_override("font_size", 19)
+		title.add_theme_font_size_override("font_size", 16)
 
 		var tier_lbl: Label = Label.new()
 		tier_lbl.text = GameState.get_activity_tier_label(act_id)
-		tier_lbl.add_theme_font_size_override("font_size", 14)
+		tier_lbl.add_theme_font_size_override("font_size", 12)
 		tier_lbl.add_theme_color_override("font_color", Color(0.129412, 0.619608, 0.737255, 1.0))
 
 		info.add_child(title)
@@ -110,11 +113,11 @@ func _rebuild_mastery_list() -> void:
 		var stars_lbl: Label = Label.new()
 		stars_lbl.text = "%d / %d" % [star_count, max_act_stars]
 		stars_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		stars_lbl.add_theme_font_size_override("font_size", 18)
+		stars_lbl.add_theme_font_size_override("font_size", 16)
 		stars_lbl.add_theme_color_override("font_color", Color(0.55, 0.30, 0.88, 1.0) if max_done else Color(0.92, 0.65, 0.08, 1.0))
 
 		var star_icon: TextureRect = TextureRect.new()
-		star_icon.custom_minimum_size = Vector2(20, 20)
+		star_icon.custom_minimum_size = Vector2(18, 18)
 		star_icon.texture = STAR_RAINBOW if max_done else STAR_FILLED
 		star_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		star_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -123,9 +126,9 @@ func _rebuild_mastery_list() -> void:
 		stars_top.add_child(star_icon)
 
 		var levels_lbl: Label = Label.new()
-		levels_lbl.text = "%d / %d levels%s" % [levels_cleared, GameState.MAX_ACTIVITY_TIER, " (Max ★)" if max_done else ""]
+		levels_lbl.text = "%d / %d lvls%s" % [levels_cleared, GameState.MAX_ACTIVITY_TIER, " ★" if max_done else ""]
 		levels_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		levels_lbl.add_theme_font_size_override("font_size", 13)
+		levels_lbl.add_theme_font_size_override("font_size", 12)
 		levels_lbl.add_theme_color_override("font_color", Color(0.32, 0.42, 0.48, 1.0))
 
 		stars_col.add_child(stars_top)
@@ -146,7 +149,8 @@ func _rebuild_sticker_grid() -> void:
 
 	_prev_sticker_btn.disabled = _sticker_page <= 0
 	_next_sticker_btn.disabled = _sticker_page >= _sticker_page_count - 1
-	var page_theme: String = "Cozy Stickers" if _sticker_page == 0 else "Deluxe & Animated"
+	var page_themes: Array[String] = ["Cozy Classics", "Deluxe Friends", "Animated Legends"]
+	var page_theme: String = page_themes[_sticker_page] if _sticker_page < page_themes.size() else "Deluxe Stickers"
 	_sticker_page_label.text = "Page %d / %d • %s" % [_sticker_page + 1, _sticker_page_count, page_theme]
 
 	for idx: int in range(start_idx, end_idx):

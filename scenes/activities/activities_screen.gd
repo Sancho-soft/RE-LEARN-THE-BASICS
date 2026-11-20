@@ -12,6 +12,7 @@ const STAR_EMPTY: Texture2D = preload("res://assets/ui/star_empty.svg")
 const LOCK_ICON: Texture2D = preload("res://assets/ui/lock.svg")
 const PAGE_SIZE: int = 4
 const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_shapes", "coin_jar"]
+const PAGE_THREE_IDS: Array[String] = ["balance_scale", "number_forge"]
 
 @onready var _back_btn: Button = %BackButton
 @onready var _coins_label: Label = %CoinsLabel
@@ -85,11 +86,27 @@ const PAGE_TWO_IDS: Array[String] = ["number_patterns", "clock_time", "rocket_sh
 @onready var _coin_jar_next_btn: Button = %CoinJarNextLevelButton
 @onready var _play_coin_jar_btn: Button = %PlayCoinJarButton
 
+@onready var _balance_tier_label: Label = %BalanceTierLabel
+@onready var _balance_stars_row: HBoxContainer = %BalanceStarsRow
+@onready var _balance_act_stars_label: Label = %BalanceActivityStarsLabel
+@onready var _balance_prev_btn: Button = %BalancePrevLevelButton
+@onready var _balance_level_badge: Label = %BalanceLevelBadge
+@onready var _balance_next_btn: Button = %BalanceNextLevelButton
+@onready var _play_balance_btn: Button = %PlayBalanceButton
+
+@onready var _forge_tier_label: Label = %ForgeTierLabel
+@onready var _forge_stars_row: HBoxContainer = %ForgeStarsRow
+@onready var _forge_act_stars_label: Label = %ForgeActivityStarsLabel
+@onready var _forge_prev_btn: Button = %ForgePrevLevelButton
+@onready var _forge_level_badge: Label = %ForgeLevelBadge
+@onready var _forge_next_btn: Button = %ForgeNextLevelButton
+@onready var _play_forge_btn: Button = %PlayForgeButton
+
 var _card_controls: Dictionary = {}
 var _viewed_tiers: Dictionary = {}
 var _level_pips: Dictionary = {}
 var _current_page: int = 0
-var _page_count: int = 2
+var _page_count: int = 3
 
 
 func _ready() -> void:
@@ -170,6 +187,24 @@ func _ready() -> void:
 			"next_btn": _coin_jar_next_btn,
 			"play_btn": _play_coin_jar_btn,
 		},
+		"balance_scale": {
+			"tier_label": _balance_tier_label,
+			"stars_row": _balance_stars_row,
+			"act_stars_label": _balance_act_stars_label,
+			"prev_btn": _balance_prev_btn,
+			"badge": _balance_level_badge,
+			"next_btn": _balance_next_btn,
+			"play_btn": _play_balance_btn,
+		},
+		"number_forge": {
+			"tier_label": _forge_tier_label,
+			"stars_row": _forge_stars_row,
+			"act_stars_label": _forge_act_stars_label,
+			"prev_btn": _forge_prev_btn,
+			"badge": _forge_level_badge,
+			"next_btn": _forge_next_btn,
+			"play_btn": _play_forge_btn,
+		},
 	}
 
 	_back_btn.pressed.connect(_go_back)
@@ -186,7 +221,12 @@ func _ready() -> void:
 		_refresh_activity_level(activity_id)
 
 	_page_count = maxi(1, ceili(float(_grid.get_child_count()) / float(PAGE_SIZE)))
-	_current_page = 1 if GameState.active_activity_id in PAGE_TWO_IDS else 0
+	if GameState.active_activity_id in PAGE_THREE_IDS:
+		_current_page = mini(2, _page_count - 1)
+	elif GameState.active_activity_id in PAGE_TWO_IDS:
+		_current_page = 1
+	else:
+		_current_page = 0
 	_apply_page()
 
 
@@ -206,7 +246,7 @@ func _inject_level_pips(activity_id: String, play_btn: Button) -> void:
 	var pip_nodes: Array[Panel] = []
 	for _lvl: int in GameState.MAX_ACTIVITY_TIER:
 		var pip: Panel = Panel.new()
-		pip.custom_minimum_size = Vector2(44, 8)
+		pip.custom_minimum_size = Vector2(46, 8)
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		pips_row.add_child(pip)
 		pip_nodes.append(pip)

@@ -152,3 +152,10 @@ func close_pause() -> void:
 		return
 	visible = false
 	resumed.emit()
+
+
+func set_labels(restart_text: String, back_text: String) -> void:
+	if _restart_btn != null:
+		_restart_btn.text = restart_text
+	if _activities_btn != null:
+		_activities_btn.text = back_text

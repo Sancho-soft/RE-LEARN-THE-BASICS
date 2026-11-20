@@ -1,0 +1,299 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/challenges/challenges_screen.gd" id="2_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+[ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="5_coin"]
+[ext_resource type="Texture2D" path="res://assets/ui/star_rainbow.svg" id="6_star_rb"]
+[ext_resource type="Texture2D" path="res://assets/art/sun.svg" id="7_sun"]
+[ext_resource type="Texture2D" path="res://assets/art/stickers/sticker_rocket.svg" id="8_rocket"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_title_pill"]
+content_margin_left = 30.0
+content_margin_top = 10.0
+content_margin_right = 30.0
+content_margin_bottom = 12.0
+bg_color = Color(0.96, 0.92, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 7
+border_color = Color(0.45, 0.25, 0.78, 1)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_timer_card"]
+content_margin_left = 26.0
+content_margin_top = 22.0
+content_margin_right = 26.0
+content_margin_bottom = 22.0
+bg_color = Color(1, 0.972549, 0.905882, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 9
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_timer_btn"]
+content_margin_left = 22.0
+content_margin_top = 12.0
+content_margin_right = 22.0
+content_margin_bottom = 14.0
+bg_color = Color(1, 0.76, 0.32, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_endless_btn"]
+content_margin_left = 22.0
+content_margin_top = 12.0
+content_margin_right = 22.0
+content_margin_bottom = 14.0
+bg_color = Color(0.58, 0.42, 0.94, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="ChallengesScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 42
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 42
+theme_override_constants/margin_bottom = 28
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LeftSlot" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/TopBar/LeftSlot"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "← Menu"
+script = ExtResource("4_juicy")
+press_sfx = &"back"
+
+[node name="TitlePill" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_title_pill")
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/TitlePill"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.25, 0.78, 1)
+theme_override_font_sizes/font_size = 32
+text = "CHAMPION CHALLENGES"
+horizontal_alignment = 1
+
+[node name="RightSlot" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="StatsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="CoinsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/CoinsBox"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = ExtResource("5_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/CoinsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0"
+
+[node name="StarsBox" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StarIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/StarsBox"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = ExtResource("6_star_rb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StarsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/RightSlot/StatsPanel/StatsRow/StarsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0 / 240"
+
+[node name="SubtitleLabel" type="Label" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.184314, 0.282353, 0.345098, 0.9)
+theme_override_font_sizes/font_size = 22
+text = "Unlocked by beating Level 8 in all 10 activities! Mix every math topic & set new records."
+horizontal_alignment = 1
+
+[node name="CenterRow" type="CenterContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/CenterRow"]
+layout_mode = 2
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="TimerCard" type="PanelContainer" parent="MarginContainer/MainVBox/CenterRow/CardsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(440, 390)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_timer_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterRow/CardsRow/TimerCard"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/CenterRow/CardsRow/TimerCard/VBox"]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("7_sun")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="MarginContainer/MainVBox/CenterRow/CardsRow/TimerCard/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "TIMER BLITZ (90s)"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/CenterRow/CardsRow/TimerCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.24, 0.36, 0.44, 1)
+theme_override_font_sizes/font_size = 19
+text = "Race the clock for 90 seconds across all 10 math activities! Watch the music speed up at 30 seconds left!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TimerRecordLabel" type="Label" parent="MarginContainer/MainVBox/CenterRow/CardsRow/TimerCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.46, 0.04, 1)
+theme_override_font_sizes/font_size = 19
+text = "Best: 0 pts  •  0 solved"
+horizontal_alignment = 1
+
+[node name="PlayTimerButton" type="Button" parent="MarginContainer/MainVBox/CenterRow/CardsRow/TimerCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_timer_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_timer_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_timer_btn")
+text = "START TIMER BLITZ"
+script = ExtResource("4_juicy")
+press_sfx = &"start"
+
+[node name="EndlessCard" type="PanelContainer" parent="MarginContainer/MainVBox/CenterRow/CardsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(440, 390)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_timer_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/CenterRow/CardsRow/EndlessCard"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/CenterRow/CardsRow/EndlessCard/VBox"]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("8_rocket")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="MarginContainer/MainVBox/CenterRow/CardsRow/EndlessCard/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "ENDLESS MARATHON"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/CenterRow/CardsRow/EndlessCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.24, 0.36, 0.44, 1)
+theme_override_font_sizes/font_size = 19
+text = "Solve an endless stream of escalating puzzles with 3 Hearts! Difficulty climbs every 5 answers."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="EndlessRecordLabel" type="Label" parent="MarginContainer/MainVBox/CenterRow/CardsRow/EndlessCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.52, 0.28, 0.86, 1)
+theme_override_font_sizes/font_size = 19
+text = "Best: 0 pts  •  0 solved  •  0 streak"
+horizontal_alignment = 1
+
+[node name="PlayEndlessButton" type="Button" parent="MarginContainer/MainVBox/CenterRow/CardsRow/EndlessCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.972549, 0.905882, 1)
+theme_override_colors/font_hover_color = Color(1, 0.972549, 0.905882, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.972549, 0.905882, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_endless_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_endless_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_endless_btn")
+text = "START ENDLESS"
+script = ExtResource("4_juicy")
+press_sfx = &"start"

@@ -18,6 +18,8 @@ const BUNNY_TEX: Texture2D = preload("res://assets/art/customer_bunny.svg")
 const BUNNY_TALK_TEX: Texture2D = preload("res://assets/art/customer_bunny_talk.svg")
 const MASCOT_TEX: Texture2D = preload("res://assets/art/mascot.svg")
 const MASCOT_TALK_TEX: Texture2D = preload("res://assets/art/mascot_talk.svg")
+const BALANCE_TEX: Texture2D = preload("res://assets/art/activity_balance.svg")
+const FORGE_TEX: Texture2D = preload("res://assets/art/activity_forge.svg")
 
 const ACTIVITY_CONFIG: Dictionary = {
 	"puzzle_doors": {
@@ -69,6 +71,20 @@ const ACTIVITY_CONFIG: Dictionary = {
 		"hero_talk": MASCOT_TALK_TEX,
 		"progress_noun": "Puzzle",
 	},
+	"balance_scale": {
+		"title": "Balance Scale",
+		"tag": "WEIGHT LAB",
+		"hero": BALANCE_TEX,
+		"hero_talk": BALANCE_TEX,
+		"progress_noun": "Scale",
+	},
+	"number_forge": {
+		"title": "Number Forge",
+		"tag": "ABACUS WORKSHOP",
+		"hero": FORGE_TEX,
+		"hero_talk": FORGE_TEX,
+		"progress_noun": "Forge",
+	},
 }
 
 @onready var _menu_btn: Button = %MenuButton
@@ -110,6 +126,7 @@ var _first_try_streak: int = 0
 var _last_answer: int = -1
 var _talker: TalkingAvatar
 var _pause_overlay: ActivityPauseOverlay
+var _mastery_pad: MasteryPad
 
 
 func _ready() -> void:
@@ -120,6 +137,7 @@ func _ready() -> void:
 
 	_selected_tier = clampi(GameState.get_activity_tier(_activity_id), 1, GameState.get_highest_unlocked_tier(_activity_id))
 	_question_stepper.setup_steps(QUESTIONS_PER_SESSION)
+	_setup_input_pad()
 	_refresh_equipped_sticker()
 
 	var init_cfg: Dictionary = ACTIVITY_CONFIG[_activity_id]
@@ -136,8 +154,25 @@ func _ready() -> void:
 
 	_menu_btn.pressed.connect(_toggle_pause)
 	_hint_btn.pressed.connect(_on_hint_pressed)
-	_number_pad.answer_submitted.connect(_on_answer_submitted)
 	_load_next_question()
+
+
+func _setup_input_pad() -> void:
+	if _activity_id == "balance_scale" or _activity_id == "number_forge":
+		_number_pad.visible = false
+		_number_pad.set_locked(true)
+		_mastery_pad = MasteryPad.new()
+		_mastery_pad.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		_number_pad.get_parent().add_child(_mastery_pad)
+		_mastery_pad.set_mode(9 if _activity_id == "balance_scale" else 10)
+		_mastery_pad.answer_submitted.connect(_on_answer_submitted)
+	else:
+		_number_pad.visible = true
+		_number_pad.answer_submitted.connect(_on_answer_submitted)
+
+
+func _active_pad() -> Control:
+	return _mastery_pad if _mastery_pad != null else _number_pad
 
 
 func _refresh_equipped_sticker() -> void:
@@ -160,12 +195,12 @@ func _toggle_pause() -> void:
 	if _pause_overlay.visible:
 		_pause_overlay.close_pause()
 	else:
-		_number_pad.set_locked(true)
+		_active_pad().call("set_locked", true)
 		_pause_overlay.open_pause()
 
 
 func _on_pause_resumed() -> void:
-	_number_pad.set_locked(_round_locked)
+	_active_pad().call("set_locked", _round_locked)
 
 
 func _generate_for_activity(tier: int) -> MathQuestion:
@@ -184,6 +219,10 @@ func _generate_for_activity(tier: int) -> MathQuestion:
 			return ShapesQuestionGenerator.generate(tier)
 		"coin_jar":
 			return CoinJarQuestionGenerator.generate(tier)
+		"balance_scale":
+			return BalanceScaleQuestionGenerator.generate(tier)
+		"number_forge":
+			return NumberForgeQuestionGenerator.generate(tier)
 	return DoorsQuestionGenerator.generate(tier)
 
 
@@ -200,8 +239,8 @@ func _load_next_question() -> void:
 	_round_locked = false
 	_attempts_on_question = 0
 	_hint_btn.disabled = false
-	_number_pad.clear_input()
-	_number_pad.set_locked(false)
+	_active_pad().call("clear_input")
+	_active_pad().call("set_locked", false)
 	_question_stepper.update_progress(_question_index, _question_index - 1)
 
 	for _try: int in 4:
@@ -214,29 +253,30 @@ func _load_next_question() -> void:
 
 
 func _apply_unit_format() -> void:
+	var pad: Control = _active_pad()
 	if _current_question == null:
-		_number_pad.set_unit_format("")
+		pad.call("set_unit_format", "")
 		return
 	var expr: String = _current_question.expression_text
-	if _activity_id == "coin_jar" and _current_question.operation != "avg" and _current_question.visual_badge_text != "Master Vault Riddle":
-		_number_pad.set_unit_format("", "", true)
+	if _activity_id == "coin_jar" and _current_question.operation != "avg" and _current_question.visual_badge_text != "Master Vault Riddle" and _current_question.visual_badge_text != "Big Vault Algebra" and _current_question.visual_badge_text != "Grand Scale Balance":
+		pad.call("set_unit_format", "", "", true)
 	elif _activity_id == "little_builder" and _current_question.operation == "pct":
-		_number_pad.set_unit_format("", "", true)
+		pad.call("set_unit_format", "", "", true)
 	elif _activity_id == "clock_time":
 		if expr.ends_with("min"):
-			_number_pad.set_unit_format("", "min")
+			pad.call("set_unit_format", "", "min")
 		elif expr.ends_with("hrs"):
-			_number_pad.set_unit_format("", "hrs")
+			pad.call("set_unit_format", "", "hrs")
 		elif expr.ends_with("days"):
-			_number_pad.set_unit_format("", "days")
+			pad.call("set_unit_format", "", "days")
 		elif expr.ends_with("km"):
-			_number_pad.set_unit_format("", "km")
+			pad.call("set_unit_format", "", "km")
 		else:
-			_number_pad.set_unit_format("")
+			pad.call("set_unit_format", "")
 	elif _activity_id == "rocket_shapes" and (_current_question.visual_badge_text.contains("180°") or _current_question.visual_badge_text.contains("360°")):
-		_number_pad.set_unit_format("", "°")
+		pad.call("set_unit_format", "", "°")
 	else:
-		_number_pad.set_unit_format("")
+		pad.call("set_unit_format", "")
 
 
 func _render_question() -> void:
@@ -253,7 +293,8 @@ func _render_question() -> void:
 	_expression_label.text = _current_question.expression_text
 
 	_rebuild_visual_groups()
-	_set_feedback("Use the number pad and press CHECK!", Color(1.0, 0.9725, 0.9059, 1.0))
+	var pad_hint: String = "Tap weight tokens on the tray and press CHECK!" if _activity_id == "balance_scale" else ("Dial 100s / 10s / 1s beads and press CHECK!" if _activity_id == "number_forge" else "Use the number pad and press CHECK!")
+	_set_feedback(pad_hint, Color(1.0, 0.9725, 0.9059, 1.0))
 	_pop_node(_hero_card)
 	_pop_node(_visual_card, 0.06)
 
@@ -264,6 +305,9 @@ func _rebuild_visual_groups() -> void:
 
 	if _activity_id == "number_patterns":
 		_build_pattern_stones()
+		return
+	if _activity_id == "balance_scale":
+		_build_balance_beam_visual()
 		return
 
 	var icon_tex: Texture2D = GameState.load_texture_safe(_current_question.visual_icon_path)
@@ -346,6 +390,52 @@ func _build_pattern_stones() -> void:
 	_animate_group_row(row, 0.0)
 
 
+func _build_balance_beam_visual() -> void:
+	var sides: PackedStringArray = _current_question.expression_text.split("=")
+	if sides.size() < 2:
+		return
+	var beam_row: HBoxContainer = HBoxContainer.new()
+	beam_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	beam_row.add_theme_constant_override("separation", 14)
+
+	for i: int in 2:
+		var pan: PanelContainer = PanelContainer.new()
+		var st: StyleBoxFlat = StyleBoxFlat.new()
+		st.content_margin_left = 18.0
+		st.content_margin_top = 10.0
+		st.content_margin_right = 18.0
+		st.content_margin_bottom = 12.0
+		st.border_width_left = 3
+		st.border_width_top = 3
+		st.border_width_right = 3
+		st.border_width_bottom = 6
+		st.border_color = Color(0.184314, 0.282353, 0.345098, 1.0)
+		st.corner_radius_top_left = 18
+		st.corner_radius_top_right = 18
+		st.corner_radius_bottom_right = 18
+		st.corner_radius_bottom_left = 18
+		var side_txt: String = sides[i].strip_edges()
+		st.bg_color = Color(1.0, 0.88, 0.48, 1.0) if side_txt.contains("?") else Color(0.84, 0.96, 0.88, 1.0)
+		pan.add_theme_stylebox_override("panel", st)
+
+		var lbl: Label = Label.new()
+		lbl.text = side_txt
+		lbl.add_theme_font_size_override("font_size", 24)
+		pan.add_child(lbl)
+		beam_row.add_child(pan)
+
+		if i == 0:
+			var fulcrum: TextureRect = TextureRect.new()
+			fulcrum.texture = BALANCE_TEX
+			fulcrum.custom_minimum_size = Vector2(48, 48)
+			fulcrum.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			fulcrum.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			beam_row.add_child(fulcrum)
+
+	_groups_container.add_child(beam_row)
+	_animate_group_row(beam_row, 0.0)
+
+
 func _animate_group_row(row: Control, delay: float) -> void:
 	if GameState.reduce_motion:
 		return
@@ -374,7 +464,7 @@ func _on_answer_submitted(value: int) -> void:
 
 func _handle_correct_answer() -> void:
 	_round_locked = true
-	_number_pad.lock_and_clear()
+	_active_pad().call("lock_and_clear")
 	GameState.play_sfx(&"correct")
 
 	_talker.finish_now()
@@ -423,8 +513,8 @@ func _handle_gentle_retry(submitted_value: int) -> void:
 	var prefix: String = "Let's check again! " if _attempts_on_question == 1 else "You entered %d — close! " % submitted_value
 	_set_feedback(prefix + _current_question.hint_text, Color(1.0, 0.93, 0.72, 1.0))
 	_hint_btn.disabled = true
-	_number_pad.clear_input()
-	_number_pad.nudge_gentle()
+	_active_pad().call("clear_input")
+	_active_pad().call("nudge_gentle")
 	_talker.react_curious()
 	_pop_node(_feedback_panel)
 

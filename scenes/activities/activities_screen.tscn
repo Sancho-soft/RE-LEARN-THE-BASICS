@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://scenes/activities/activities_screen.gd" id="2_act_gd"]
@@ -15,6 +15,8 @@
 [ext_resource type="Texture2D" path="res://assets/art/stickers/sticker_sprout.svg" id="13_sprout"]
 [ext_resource type="Texture2D" path="res://assets/art/sun.svg" id="14_sun"]
 [ext_resource type="Texture2D" path="res://assets/art/stickers/sticker_rocket.svg" id="15_rocket"]
+[ext_resource type="Texture2D" path="res://assets/art/activity_balance.svg" id="16_balance"]
+[ext_resource type="Texture2D" path="res://assets/art/activity_forge.svg" id="17_forge"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 content_margin_left = 20.0
@@ -279,7 +281,7 @@ stretch_mode = 5
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "0 / 192"
+text = "0 / 240"
 
 [node name="PageRow" type="HBoxContainer" parent="MarginContainer/MainVBox"]
 layout_mode = 2
@@ -385,7 +387,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ShopCard/VBox"]
@@ -523,7 +525,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/DoorsCard/VBox"]
@@ -661,7 +663,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BuilderCard/VBox"]
@@ -799,7 +801,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/SharingCard/VBox"]
@@ -938,7 +940,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/PatternsCard/VBox"]
@@ -1077,7 +1079,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/TimeCard/VBox"]
@@ -1216,7 +1218,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ShapesCard/VBox"]
@@ -1355,7 +1357,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
 theme_override_font_sizes/font_size = 13
-text = "All: 0/24 ★"
+text = "All: 0/30 ★"
 horizontal_alignment = 2
 
 [node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox"]
@@ -1407,6 +1409,282 @@ script = ExtResource("4_juicy")
 press_sfx = &"toggle"
 
 [node name="PlayCoinJarButton" type="Button" parent="MarginContainer/MainVBox/PageRow/Grid/CoinJarCard/VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_play_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "PLAY"
+script = ExtResource("4_juicy")
+
+[node name="BalanceCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
+custom_minimum_size = Vector2(510, 210)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("16_balance")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Name" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow/TitleCol"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "9. Balance Scale"
+
+[node name="BalanceTierLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow/TitleCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 15
+text = "Level 1: Light Pan Balance"
+autowrap_mode = 2
+
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="BalanceStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 4
+
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow/StarsCol/BalanceStarsRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow/StarsCol/BalanceStarsRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow/StarsCol/BalanceStarsRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BalanceActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 17
+text = "Stack weight tokens (no calculator!) to balance two-sided scale puzzles!"
+autowrap_mode = 2
+
+[node name="ActionRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BalancePrevLevelButton" type="Button" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Previous level"
+theme_override_font_sizes/font_size = 20
+theme_override_styles/disabled = SubResource("StyleBoxFlat_step_disabled")
+theme_override_styles/hover = SubResource("StyleBoxFlat_step_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_step_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_step_pressed")
+text = "◀"
+script = ExtResource("4_juicy")
+press_sfx = &"toggle"
+
+[node name="BalanceLevelBadge" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Lvl 1/8"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BalanceNextLevelButton" type="Button" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Next level"
+theme_override_font_sizes/font_size = 20
+theme_override_styles/disabled = SubResource("StyleBoxFlat_step_disabled")
+theme_override_styles/hover = SubResource("StyleBoxFlat_step_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_step_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_step_pressed")
+text = "▶"
+script = ExtResource("4_juicy")
+press_sfx = &"toggle"
+
+[node name="PlayBalanceButton" type="Button" parent="MarginContainer/MainVBox/PageRow/Grid/BalanceCard/VBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_play_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_play_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_play_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_play_pressed")
+text = "PLAY"
+script = ExtResource("4_juicy")
+
+[node name="ForgeCard" type="PanelContainer" parent="MarginContainer/MainVBox/PageRow/Grid"]
+custom_minimum_size = Vector2(510, 210)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("17_forge")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Name" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow/TitleCol"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "10. Number Forge"
+
+[node name="ForgeTierLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow/TitleCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 15
+text = "Level 1: Place-Value Forge"
+autowrap_mode = 2
+
+[node name="StarsCol" type="VBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="ForgeStarsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 4
+
+[node name="S1" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow/StarsCol/ForgeStarsRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S2" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow/StarsCol/ForgeStarsRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="S3" type="TextureRect" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow/StarsCol/ForgeStarsRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("8_star_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ForgeActivityStarsLabel" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/HeaderRow/StarsCol"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.49, 0.04, 1)
+theme_override_font_sizes/font_size = 13
+text = "All: 0/24 ★"
+horizontal_alignment = 2
+
+[node name="Desc" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 17
+text = "Dial glowing 100s, 10s & 1s abacus beads to forge tough multi-step puzzles!"
+autowrap_mode = 2
+
+[node name="ActionRow" type="HBoxContainer" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ForgePrevLevelButton" type="Button" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Previous level"
+theme_override_font_sizes/font_size = 20
+theme_override_styles/disabled = SubResource("StyleBoxFlat_step_disabled")
+theme_override_styles/hover = SubResource("StyleBoxFlat_step_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_step_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_step_pressed")
+text = "◀"
+script = ExtResource("4_juicy")
+press_sfx = &"toggle"
+
+[node name="ForgeLevelBadge" type="Label" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Lvl 1/8"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ForgeNextLevelButton" type="Button" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+tooltip_text = "Next level"
+theme_override_font_sizes/font_size = 20
+theme_override_styles/disabled = SubResource("StyleBoxFlat_step_disabled")
+theme_override_styles/hover = SubResource("StyleBoxFlat_step_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_step_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_step_pressed")
+text = "▶"
+script = ExtResource("4_juicy")
+press_sfx = &"toggle"
+
+[node name="PlayForgeButton" type="Button" parent="MarginContainer/MainVBox/PageRow/Grid/ForgeCard/VBox/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

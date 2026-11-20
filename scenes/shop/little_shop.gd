@@ -68,6 +68,7 @@ func _ready() -> void:
 	GameState.set_bgm_context(&"activity")
 	_selected_tier = clampi(GameState.get_activity_tier("little_shop"), 1, GameState.get_highest_unlocked_tier("little_shop"))
 	_question_stepper.setup_steps(QUESTIONS_PER_SHIFT)
+	_number_pad.visible = true
 	_number_pad.set_unit_format("", "", true)
 	_refresh_equipped_sticker()
 
@@ -86,6 +87,10 @@ func _ready() -> void:
 	_hint_btn.pressed.connect(_on_hint_pressed)
 	_number_pad.answer_submitted.connect(_on_answer_submitted)
 	_load_next_question()
+
+
+func _active_pad() -> Control:
+	return _number_pad
 
 
 func _refresh_equipped_sticker() -> void:
@@ -120,12 +125,12 @@ func _toggle_pause() -> void:
 	if _pause_overlay.visible:
 		_pause_overlay.close_pause()
 	else:
-		_number_pad.set_locked(true)
+		_active_pad().call("set_locked", true)
 		_pause_overlay.open_pause()
 
 
 func _on_pause_resumed() -> void:
-	_number_pad.set_locked(_round_locked)
+	_active_pad().call("set_locked", _round_locked)
 
 
 func _load_next_question() -> void:
@@ -137,8 +142,8 @@ func _load_next_question() -> void:
 	_round_locked = false
 	_attempts_on_question = 0
 	_hint_btn.disabled = false
-	_number_pad.clear_input()
-	_number_pad.set_locked(false)
+	_active_pad().call("clear_input")
+	_active_pad().call("set_locked", false)
 	_question_stepper.update_progress(_question_index, _question_index - 1)
 
 	for _try: int in 4:
@@ -202,7 +207,7 @@ func _on_answer_submitted(value: int) -> void:
 
 func _handle_correct_answer() -> void:
 	_round_locked = true
-	_number_pad.lock_and_clear()
+	_active_pad().call("lock_and_clear")
 	GameState.play_sfx(&"correct")
 
 	if _attempts_on_question <= 1:
@@ -246,8 +251,8 @@ func _handle_gentle_retry(submitted_value: int) -> void:
 	var prefix: String = "Let's check again! " if _attempts_on_question == 1 else "You entered %d — close! " % submitted_value
 	_set_feedback(prefix + _current_question.hint_text, Color(1.0, 0.93, 0.72, 1.0))
 	_hint_btn.disabled = true
-	_number_pad.clear_input()
-	_number_pad.nudge_gentle()
+	_active_pad().call("clear_input")
+	_active_pad().call("nudge_gentle")
 	_talker.react_curious()
 	_pop_node(_feedback_panel)
 

@@ -5,6 +5,8 @@ extends Control
 const LITTLE_SHOP_SCENE: String = "res://scenes/shop/little_shop.tscn"
 const MATH_ACTIVITY_SCENE: String = "res://scenes/play/math_activity.tscn"
 const ACTIVITIES_SCENE: String = "res://scenes/activities/activities_screen.tscn"
+const CHALLENGES_SCENE: String = "res://scenes/challenges/challenges_screen.tscn"
+const CHALLENGE_PLAY_SCENE: String = "res://scenes/challenges/challenge_play.tscn"
 const MAIN_MENU_SCENE: String = "res://scenes/menu/main_menu.tscn"
 
 const STAR_FILLED: Texture2D = preload("res://assets/ui/star.svg")
@@ -33,6 +35,7 @@ const MASCOT_TALK: Texture2D = preload("res://assets/art/mascot_talk.svg")
 var _activity_id: String = "little_shop"
 var _played_tier: int = 1
 var _next_tier: int = 0
+var _run_mode: String = "activity"
 
 
 func _ready() -> void:
@@ -40,8 +43,15 @@ func _ready() -> void:
 	_populate_summary()
 	_next_level_btn.pressed.connect(_on_next_level)
 	_play_again_btn.pressed.connect(_on_play_again)
-	_activities_btn.pressed.connect(func() -> void: GameState.change_scene(ACTIVITIES_SCENE))
+	_activities_btn.pressed.connect(_on_hub_pressed)
 	_menu_btn.pressed.connect(func() -> void: GameState.change_scene(MAIN_MENU_SCENE))
+
+
+func _on_hub_pressed() -> void:
+	if _run_mode == "timer" or _run_mode == "endless":
+		GameState.change_scene(CHALLENGES_SCENE)
+	else:
+		GameState.change_scene(ACTIVITIES_SCENE)
 
 
 func _on_next_level() -> void:
@@ -52,6 +62,10 @@ func _on_next_level() -> void:
 
 
 func _on_play_again() -> void:
+	if _run_mode == "timer" or _run_mode == "endless":
+		GameState.active_challenge_mode = _run_mode
+		GameState.change_scene(CHALLENGE_PLAY_SCENE)
+		return
 	GameState.set_activity_tier(_activity_id, _played_tier, true)
 	_launch_activity()
 
@@ -70,6 +84,11 @@ func _get_tier_text(activity_id: String, tier: int) -> String:
 
 func _populate_summary() -> void:
 	var summary: Dictionary = GameState.last_run_summary
+	_run_mode = str(summary.get("mode", "activity"))
+	if _run_mode == "timer" or _run_mode == "endless":
+		_populate_challenge_summary(summary)
+		return
+
 	_activity_id = str(summary.get("activity_id", "little_shop"))
 	var activity_name: String = str(summary.get("activity_name", "The Little Shop"))
 	var earned_coins: int = int(summary.get("coins_earned", 0))
@@ -156,6 +175,75 @@ func _populate_summary() -> void:
 			tween.tween_callback(_play_star_sparkle.bind(rect))
 
 	if (earned_stars == 3 or unlocked_next_tier > 0) and not GameState.reduce_motion:
+		call_deferred("_trigger_confetti")
+
+
+func _populate_challenge_summary(summary: Dictionary) -> void:
+	var score: int = int(summary.get("score", 0))
+	var solved: int = int(summary.get("solved_count", 0))
+	var best_streak: int = int(summary.get("best_streak", 0))
+	var earned_coins: int = int(summary.get("coins_earned", 0))
+	var is_new_record: bool = bool(summary.get("is_new_record", false))
+	var earned_stars: int = 3 if (is_new_record or solved >= 12) else (2 if solved >= 6 else 1)
+
+	if _run_mode == "timer":
+		_title_label.text = "TIMER BLITZ: TIME'S UP!"
+	else:
+		_title_label.text = "ENDLESS MARATHON COMPLETE!"
+
+	var cheer_line: String = "What a thrilling run! You never gave up!"
+	if is_new_record:
+		cheer_line = "NEW PERSONAL BEST! Pip is cheering for you!"
+	elif solved >= 10:
+		cheer_line = "Lightning-fast math mastery across every world!"
+
+	if GameState.equipped_sticker != "" and GameState.get_sticker_icon_path(GameState.equipped_sticker) != "":
+		_equipped_sticker_view.visible = true
+		_equipped_sticker_view.setup_sticker(GameState.equipped_sticker, Vector2(68, 68), false, true)
+	else:
+		_equipped_sticker_view.visible = false
+
+	var talker: TalkingAvatar = TalkingAvatar.new()
+	add_child(talker)
+	talker.setup(_mascot, _mascot_speech_label, MASCOT_IDLE, MASCOT_TALK)
+	talker.say(cheer_line)
+	talker.finish_now()
+	talker.react_happy()
+
+	var record_val: int = GameState.timer_best_score if _run_mode == "timer" else GameState.endless_best_score
+	_detail_label.text = "Score: %d  •  Solved: %d  •  Best Streak: %d" % [score, solved, best_streak]
+	_totals_label.text = "Personal Best: %d pts   |   Total Saved: %d Coins" % [record_val, GameState.coins]
+
+	_unlock_banner_label.visible = is_new_record
+	if is_new_record:
+		_unlock_banner_label.text = "NEW HIGH SCORE! Champion Challenge Record!"
+	_next_tier = 0
+	_next_level_btn.visible = false
+	_activities_btn.text = "Challenges"
+
+	if GameState.reduce_motion or earned_coins <= 0:
+		_coins_earned_label.text = "+%d Coins Earned!" % earned_coins
+	else:
+		_coins_earned_label.text = "+0 Coins Earned!"
+		var coin_tween: Tween = create_tween()
+		coin_tween.tween_method(_set_coin_rollup, 0, earned_coins, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+	var star_nodes: Array[Node] = _stars_row.get_children()
+	for i: int in star_nodes.size():
+		var rect: TextureRect = star_nodes[i] as TextureRect
+		if rect == null:
+			continue
+		var is_earned: bool = i < earned_stars
+		rect.texture = STAR_RAINBOW if is_earned else STAR_EMPTY
+		if is_earned and not GameState.reduce_motion:
+			rect.pivot_offset = rect.custom_minimum_size * 0.5
+			rect.scale = Vector2.ZERO
+			var tween: Tween = create_tween()
+			tween.tween_interval(0.15 * float(i))
+			tween.tween_property(rect, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			tween.tween_callback(_play_star_sparkle.bind(rect))
+
+	if (is_new_record or earned_stars == 3) and not GameState.reduce_motion:
 		call_deferred("_trigger_confetti")
 
 

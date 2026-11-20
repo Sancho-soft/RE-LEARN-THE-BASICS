@@ -1,0 +1,349 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scenes/challenges/challenge_play.gd" id="2_gd"]
+[ext_resource type="PackedScene" path="res://scenes/components/sky_background.tscn" id="3_sky_bg"]
+[ext_resource type="Script" path="res://scenes/components/juicy_button.gd" id="4_juicy"]
+[ext_resource type="Texture2D" path="res://assets/ui/coin.svg" id="5_coin"]
+[ext_resource type="Texture2D" path="res://assets/art/mascot.svg" id="6_mascot"]
+[ext_resource type="Texture2D" path="res://assets/ui/hint_bulb.svg" id="7_bulb"]
+[ext_resource type="PackedScene" path="res://scenes/components/number_pad.tscn" id="8_numpad"]
+[ext_resource type="Script" path="res://scenes/components/sticker_view.gd" id="9_sticker_view"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(1, 0.972549, 0.905882, 0.96)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_streak"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+bg_color = Color(1, 0.88, 0.56, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sticker_pill"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.95, 0.91, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.45, 0.25, 0.78, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+content_margin_left = 20.0
+content_margin_top = 6.0
+content_margin_right = 20.0
+content_margin_bottom = 6.0
+bg_color = Color(0.93, 0.88, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0.45, 0.25, 0.78, 1)
+corner_radius_top_left = 999
+corner_radius_top_right = 999
+corner_radius_bottom_right = 999
+corner_radius_bottom_left = 999
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_feedback"]
+content_margin_left = 20.0
+content_margin_top = 12.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+bg_color = Color(1, 0.972549, 0.905882, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 6
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hint_btn"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+bg_color = Color(1, 0.86, 0.42, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 7
+border_color = Color(0.184314, 0.282353, 0.345098, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="ChallengePlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_gd")
+
+[node name="SkyBackground" parent="." instance=ExtResource("3_sky_bg")]
+layout_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 18
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MenuButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Pause"
+script = ExtResource("4_juicy")
+press_sfx = &"back"
+
+[node name="StatusBarCard" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
+
+[node name="Row" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatusBarCard"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="ModeLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatusBarCard/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.25, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "TIMER BLITZ"
+
+[node name="StatusPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar/StatusBarCard/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_streak")
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatusBarCard/Row/StatusPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1:30"
+
+[node name="HeartsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/StatusBarCard/Row"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ScoreLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StatusBarCard/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.129412, 0.619608, 0.737255, 1)
+theme_override_font_sizes/font_size = 22
+text = "Score: 0"
+
+[node name="StreakPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_streak")
+
+[node name="StreakLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/StreakPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "2 Streak!"
+
+[node name="StickerCheerPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sticker_pill")
+
+[node name="EquippedStickerView" type="Control" parent="MarginContainer/MainVBox/TopBar/StickerCheerPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("9_sticker_view")
+
+[node name="CoinsPanel" type="PanelContainer" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
+
+[node name="CoinsRow" type="HBoxContainer" parent="MarginContainer/MainVBox/TopBar/CoinsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CoinIcon" type="TextureRect" parent="MarginContainer/MainVBox/TopBar/CoinsPanel/CoinsRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture = ExtResource("5_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SessionCoinsLabel" type="Label" parent="MarginContainer/MainVBox/TopBar/CoinsPanel/CoinsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "+0"
+
+[node name="BodyRow" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Stage" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="HeroCard" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/Stage"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HeroRow" type="HBoxContainer" parent="MarginContainer/MainVBox/BodyRow/Stage/HeroCard"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="HeroIcon" type="TextureRect" parent="MarginContainer/MainVBox/BodyRow/Stage/HeroCard/HeroRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("6_mascot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow/Stage/HeroCard/HeroRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 4
+
+[node name="TagLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/Stage/HeroCard/HeroRow/TextVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.25, 0.78, 1)
+theme_override_font_sizes/font_size = 16
+text = "CHALLENGE"
+
+[node name="PromptLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/Stage/HeroCard/HeroRow/TextVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Get ready for mixed math!"
+autowrap_mode = 2
+
+[node name="VisualCard" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/Stage"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VisualVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow/Stage/VisualCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="BadgePill" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/Stage/VisualCard/VisualVBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="VisualBadge" type="Label" parent="MarginContainer/MainVBox/BodyRow/Stage/VisualCard/VisualVBox/BadgePill"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Mixed Challenge"
+horizontal_alignment = 1
+
+[node name="GroupsContainer" type="VBoxContainer" parent="MarginContainer/MainVBox/BodyRow/Stage/VisualCard/VisualVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="ExpressionLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/Stage/VisualCard/VisualVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "3 + 4 = ?"
+horizontal_alignment = 1
+
+[node name="FeedbackRow" type="HBoxContainer" parent="MarginContainer/MainVBox/BodyRow/Stage"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="FeedbackPanel" type="PanelContainer" parent="MarginContainer/MainVBox/BodyRow/Stage/FeedbackRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_feedback")
+
+[node name="FeedbackLabel" type="Label" parent="MarginContainer/MainVBox/BodyRow/Stage/FeedbackRow/FeedbackPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Solve quickly and press CHECK!"
+autowrap_mode = 2
+
+[node name="HintButton" type="Button" parent="MarginContainer/MainVBox/BodyRow/Stage/FeedbackRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_hint_btn")
+text = "Hint"
+icon = ExtResource("7_bulb")
+expand_icon = true
+script = ExtResource("4_juicy")
+press_sfx = &"hint"
+
+[node name="NumberPad" parent="MarginContainer/MainVBox/BodyRow" instance=ExtResource("8_numpad")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4

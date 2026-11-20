@@ -11,9 +11,14 @@ const FADE_DURATION: float = 0.18
 
 const BGM_PATH: String = "res://assets/audio/bgm_cozy.mp3"
 const ACTIVITY_BGM_PATH: String = "res://assets/audio/bgm_activity.mp3"
+const TIMER_NORMAL_BGM_PATH: String = "res://assets/audio/bgm_timer_normal.mp3"
+const TIMER_FAST_BGM_PATH: String = "res://assets/audio/bgm_timer_fast.mp3"
+const ENDLESS_BGM_PATH: String = "res://assets/audio/bgm_endless.mp3"
+const TIMES_UP_OST_PATH: String = "res://assets/audio/bgm_times_up.wav"
 const RARE_BGM_PATH: String = "res://scenes/menu/re-learn the basics main theme (Secret).mp3"
 const BGM_BASE_DB: float = -10.0
 const BGM_ACTIVITY_DB: float = -16.5
+const BGM_TIMER_DB: float = -14.5
 const BGM_DUCK_DB: float = -16.0
 const BGM_ACTIVITY_DUCK_DB: float = -22.5
 const BGM_SILENT_DB: float = -80.0
@@ -45,8 +50,11 @@ const STICKER_CATALOG: Array[Dictionary] = [
 	{"id": "unicorn", "name": "Star Unicorn", "cost": 115, "icon": "res://assets/art/stickers/sticker_unicorn.svg", "animated": false},
 	{"id": "panda", "name": "Cozy Panda", "cost": 135, "icon": "res://assets/art/stickers/sticker_panda.svg", "animated": false},
 	{"id": "shooting_star", "name": "Comet Star", "cost": 180, "icon": "res://assets/art/stickers/sticker_shooting_star.svg", "animated": true, "anim_style": "comet"},
+	{"id": "cosmic_planet", "name": "Ringed Planet", "cost": 210, "icon": "res://assets/art/stickers/sticker_cosmic_planet.svg", "animated": true, "anim_style": "orbit"},
 	{"id": "dragon", "name": "Galaxy Dragon", "cost": 240, "icon": "res://assets/art/stickers/sticker_dragon.svg", "animated": true, "anim_style": "float"},
+	{"id": "crystal_butterfly", "name": "Crystal Wing", "cost": 270, "icon": "res://assets/art/stickers/sticker_crystal_butterfly.svg", "animated": true, "anim_style": "flutter"},
 	{"id": "prism_owl", "name": "Prism Owl", "cost": 320, "icon": "res://assets/art/stickers/sticker_prism_owl.svg", "animated": true, "anim_style": "rainbow"},
+	{"id": "phoenix", "name": "Golden Phoenix", "cost": 360, "icon": "res://assets/art/stickers/sticker_phoenix.svg", "animated": true, "anim_style": "flame"},
 ]
 
 const RESOLUTION_PRESETS: Array[Dictionary] = [
@@ -72,6 +80,8 @@ var activity_stars: Dictionary = {
 	"clock_time": 0,
 	"rocket_shapes": 0,
 	"coin_jar": 0,
+	"balance_scale": 0,
+	"number_forge": 0,
 }
 var activity_level_stars: Dictionary = {}
 var activity_tiers: Dictionary = {
@@ -83,6 +93,8 @@ var activity_tiers: Dictionary = {
 	"clock_time": 1,
 	"rocket_shapes": 1,
 	"coin_jar": 1,
+	"balance_scale": 1,
+	"number_forge": 1,
 }
 var shop_tier: int:
 	get:
@@ -94,7 +106,15 @@ var unlocked_stickers: Array[String] = []
 var equipped_sticker: String = ""
 
 var active_activity_id: String = "little_shop"
+var active_challenge_mode: String = "timer" # "timer" or "endless"
 var last_run_summary: Dictionary = {}
+
+# --- Challenge Records ---
+var timer_best_score: int = 0
+var timer_best_solved: int = 0
+var endless_best_score: int = 0
+var endless_best_solved: int = 0
+var endless_best_streak: int = 0
 
 # --- Settings ---
 var sfx_enabled: bool = true
@@ -108,6 +128,8 @@ var _fade_rect: ColorRect
 var _is_transitioning: bool = false
 
 var _bgm_player: AudioStreamPlayer
+var _bgm_cross_player: AudioStreamPlayer
+var _times_up_player: AudioStreamPlayer
 var _duck_tween: Tween
 var _bgm_fade_tween: Tween
 var _is_fading_bgm: bool = false
@@ -115,6 +137,10 @@ var _bgm_context: StringName = &"menu"
 var _is_rare_theme_active: bool = false
 var _menu_bgm_stream: AudioStream
 var _activity_bgm_stream: AudioStream
+var _timer_normal_stream: AudioStream
+var _timer_fast_stream: AudioStream
+var _endless_bgm_stream: AudioStream
+var _times_up_stream: AudioStream
 var _rare_bgm_stream: AudioStream
 var _texture_cache: Dictionary = {}
 
@@ -180,8 +206,21 @@ func _setup_bgm() -> void:
 	_bgm_player.volume_db = _get_bgm_target_db()
 	add_child(_bgm_player)
 
+	_bgm_cross_player = AudioStreamPlayer.new()
+	_bgm_cross_player.bus = &"Master"
+	_bgm_cross_player.volume_db = BGM_SILENT_DB
+	add_child(_bgm_cross_player)
+
+	_times_up_player = AudioStreamPlayer.new()
+	_times_up_player.bus = &"Master"
+	add_child(_times_up_player)
+
 	_menu_bgm_stream = _load_bgm_stream(BGM_PATH)
 	_activity_bgm_stream = _load_bgm_stream(ACTIVITY_BGM_PATH)
+	_timer_normal_stream = _load_bgm_stream(TIMER_NORMAL_BGM_PATH)
+	_timer_fast_stream = _load_bgm_stream(TIMER_FAST_BGM_PATH)
+	_endless_bgm_stream = _load_bgm_stream(ENDLESS_BGM_PATH)
+	_times_up_stream = _load_one_shot_stream(TIMES_UP_OST_PATH)
 	if _menu_bgm_stream != null:
 		_bgm_player.stream = _menu_bgm_stream
 		if music_enabled:
@@ -191,7 +230,11 @@ func _setup_bgm() -> void:
 
 
 func _get_bgm_base_db() -> float:
-	return BGM_ACTIVITY_DB if _bgm_context == &"activity" else BGM_BASE_DB
+	if _bgm_context == &"activity":
+		return BGM_ACTIVITY_DB
+	if _bgm_context == &"timer_normal" or _bgm_context == &"timer_fast" or _bgm_context == &"endless":
+		return BGM_TIMER_DB
+	return BGM_BASE_DB
 
 
 func _get_bgm_target_db() -> float:
@@ -203,11 +246,26 @@ func _get_bgm_target_db() -> float:
 func _get_bgm_duck_db() -> float:
 	if bgm_volume_percent <= 0:
 		return BGM_SILENT_DB
-	var duck_base: float = BGM_ACTIVITY_DUCK_DB if _bgm_context == &"activity" else BGM_DUCK_DB
+	var duck_base: float = BGM_ACTIVITY_DUCK_DB if (_bgm_context == &"activity" or _bgm_context == &"timer_normal" or _bgm_context == &"timer_fast" or _bgm_context == &"endless") else BGM_DUCK_DB
 	return maxf(duck_base + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB)
 
 
 func _get_stream_for_context(context: StringName) -> AudioStream:
+	if context == &"timer_normal":
+		if _timer_normal_stream == null:
+			_timer_normal_stream = _load_bgm_stream(TIMER_NORMAL_BGM_PATH)
+		if _timer_normal_stream != null:
+			return _timer_normal_stream
+	if context == &"timer_fast":
+		if _timer_fast_stream == null:
+			_timer_fast_stream = _load_bgm_stream(TIMER_FAST_BGM_PATH)
+		if _timer_fast_stream != null:
+			return _timer_fast_stream
+	if context == &"endless":
+		if _endless_bgm_stream == null:
+			_endless_bgm_stream = _load_bgm_stream(ENDLESS_BGM_PATH)
+		if _endless_bgm_stream != null:
+			return _endless_bgm_stream
 	if _is_rare_theme_active:
 		var rare_stream: AudioStream = _load_rare_bgm()
 		if rare_stream != null:
@@ -222,10 +280,48 @@ func _get_stream_for_context(context: StringName) -> AudioStream:
 	return _menu_bgm_stream
 
 
-func set_bgm_context(context: StringName) -> void:
-	if _bgm_context == context:
+func _load_one_shot_stream(path: String) -> AudioStream:
+	var stream: AudioStream = null
+	if ResourceLoader.exists(path):
+		stream = load(path) as AudioStream
+	if stream == null and path.to_lower().ends_with(".wav") and FileAccess.file_exists(path):
+		stream = AudioStreamWAV.load_from_file(path)
+	if stream is AudioStreamWAV:
+		(stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_DISABLED
+	elif stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = false
+	return stream
+
+
+func play_times_up_music() -> void:
+	if _bgm_fade_tween != null and _bgm_fade_tween.is_valid():
+		_bgm_fade_tween.kill()
+	if _duck_tween != null and _duck_tween.is_valid():
+		_duck_tween.kill()
+	_is_fading_bgm = false
+	_bgm_context = &"times_up"
+	if _bgm_player != null and _bgm_player.playing:
+		_bgm_player.stop()
+	if _bgm_cross_player != null and _bgm_cross_player.playing:
+		_bgm_cross_player.stop()
+	if not music_enabled:
 		return
+	if _times_up_stream == null:
+		_times_up_stream = _load_one_shot_stream(TIMES_UP_OST_PATH)
+	if _times_up_player != null and _times_up_stream != null:
+		_times_up_player.stream = _times_up_stream
+		var db: float = maxf(-8.0 + linear_to_db(float(bgm_volume_percent) / 100.0), BGM_SILENT_DB) if bgm_volume_percent > 0 else BGM_SILENT_DB
+		_times_up_player.volume_db = db
+		_times_up_player.play()
+
+
+func set_bgm_context(context: StringName) -> void:
+	if _bgm_context == context and _bgm_player != null and _bgm_player.playing:
+		return
+	var prev_context: StringName = _bgm_context
 	_bgm_context = context
+	if _times_up_player != null and _times_up_player.playing:
+		_times_up_player.stop()
 	if _bgm_player == null:
 		return
 
@@ -236,6 +332,8 @@ func set_bgm_context(context: StringName) -> void:
 		_duck_tween.kill()
 	if _bgm_fade_tween != null and _bgm_fade_tween.is_valid():
 		_bgm_fade_tween.kill()
+	if _bgm_cross_player != null and _bgm_cross_player.playing:
+		_bgm_cross_player.stop()
 	_is_fading_bgm = false
 
 	if not music_enabled:
@@ -246,6 +344,12 @@ func set_bgm_context(context: StringName) -> void:
 
 	if target_stream == null:
 		return
+
+	# Sync-matched crossfade when escalating from normal to fast timer track at 30s remaining.
+	if prev_context == &"timer_normal" and context == &"timer_fast":
+		if _bgm_player.playing and _bgm_cross_player != null:
+			_crossfade_synced_stream(target_stream, target_db)
+			return
 
 	# Same stream (e.g. secret rare theme active): just smoothly adjust volume for gameplay focus.
 	if _bgm_player.stream == target_stream and _bgm_player.playing:
@@ -266,6 +370,31 @@ func set_bgm_context(context: StringName) -> void:
 		_switch_bgm_stream(target_stream)
 	_bgm_fade_tween.tween_property(_bgm_player, "volume_db", target_db, fade_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_bgm_fade_tween.tween_callback(func() -> void: _is_fading_bgm = false)
+
+
+func _crossfade_synced_stream(target_stream: AudioStream, target_db: float) -> void:
+	var pos: float = _bgm_player.get_playback_position() + AudioServer.get_time_since_last_mix()
+	var target_len: float = target_stream.get_length()
+	if target_len > 0.1:
+		pos = fmod(maxf(0.0, pos), target_len)
+
+	_bgm_cross_player.stop()
+	_bgm_cross_player.stream = target_stream
+	_bgm_cross_player.volume_db = BGM_SILENT_DB
+	_bgm_cross_player.play(pos)
+
+	var cross_time: float = 0.18 if reduce_motion else 0.35
+	_is_fading_bgm = true
+	_bgm_fade_tween = create_tween().set_parallel(true)
+	_bgm_fade_tween.tween_property(_bgm_player, "volume_db", BGM_SILENT_DB, cross_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_bgm_fade_tween.tween_property(_bgm_cross_player, "volume_db", target_db, cross_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_bgm_fade_tween.chain().tween_callback(func() -> void:
+		_bgm_player.stop()
+		var finished_old: AudioStreamPlayer = _bgm_player
+		_bgm_player = _bgm_cross_player
+		_bgm_cross_player = finished_old
+		_is_fading_bgm = false
+	)
 
 
 func _switch_bgm_stream(target_stream: AudioStream) -> void:
@@ -342,6 +471,8 @@ func _load_bgm_stream(path: String) -> AudioStream:
 		stream = load(path) as AudioStream
 	if stream == null and path.to_lower().ends_with(".mp3") and FileAccess.file_exists(path):
 		stream = AudioStreamMP3.load_from_file(path)
+	elif stream == null and path.to_lower().ends_with(".wav") and FileAccess.file_exists(path):
+		stream = AudioStreamWAV.load_from_file(path)
 	if stream is AudioStreamWAV:
 		var wav: AudioStreamWAV = stream as AudioStreamWAV
 		wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
@@ -401,6 +532,8 @@ func set_sfx_enabled(enabled: bool) -> void:
 
 func set_music_enabled(enabled: bool) -> void:
 	music_enabled = enabled
+	if _bgm_cross_player != null and _bgm_cross_player.playing:
+		_bgm_cross_player.stop()
 	if _bgm_player != null:
 		if _bgm_fade_tween != null and _bgm_fade_tween.is_valid():
 			_bgm_fade_tween.kill()
@@ -527,6 +660,10 @@ func get_activity_tier_label(activity_id: String, tier: int = -1) -> String:
 			return ShapesQuestionGenerator.get_tier_label(resolved_tier)
 		"coin_jar":
 			return CoinJarQuestionGenerator.get_tier_label(resolved_tier)
+		"balance_scale":
+			return BalanceScaleQuestionGenerator.get_tier_label(resolved_tier)
+		"number_forge":
+			return NumberForgeQuestionGenerator.get_tier_label(resolved_tier)
 	return "Level %d" % resolved_tier
 
 
@@ -558,6 +695,41 @@ func get_activity_completed_levels(activity_id: String) -> int:
 
 func has_finished_max_level(activity_id: String) -> bool:
 	return get_level_stars(activity_id, MAX_ACTIVITY_TIER) > 0
+
+
+func get_completed_activities_count() -> int:
+	var count: int = 0
+	for key: Variant in activity_stars.keys():
+		if has_finished_max_level(str(key)):
+			count += 1
+	return count
+
+
+func is_game_completed() -> bool:
+	return get_completed_activities_count() >= activity_stars.size()
+
+
+func record_challenge_run(mode: String, score: int, solved: int, best_streak: int, coins_earned: int) -> bool:
+	coins += maxi(coins_earned, 0)
+	total_solved += maxi(solved, 0)
+	var is_new_record: bool = false
+	if mode == "timer":
+		if score > timer_best_score:
+			timer_best_score = score
+			is_new_record = true
+		if solved > timer_best_solved:
+			timer_best_solved = solved
+	else:
+		if score > endless_best_score:
+			endless_best_score = score
+			is_new_record = true
+		if solved > endless_best_solved:
+			endless_best_solved = solved
+		if best_streak > endless_best_streak:
+			endless_best_streak = best_streak
+	save_game()
+	stats_changed.emit(coins, stars)
+	return is_new_record
 
 
 func get_max_activity_stars() -> int:
@@ -678,6 +850,11 @@ func save_game() -> void:
 	config.set_value("progress", "activity_tiers", activity_tiers)
 	config.set_value("progress", "unlocked_stickers", unlocked_stickers)
 	config.set_value("progress", "equipped_sticker", equipped_sticker)
+	config.set_value("challenges", "timer_best_score", timer_best_score)
+	config.set_value("challenges", "timer_best_solved", timer_best_solved)
+	config.set_value("challenges", "endless_best_score", endless_best_score)
+	config.set_value("challenges", "endless_best_solved", endless_best_solved)
+	config.set_value("challenges", "endless_best_streak", endless_best_streak)
 	config.set_value("settings", "sfx_enabled", sfx_enabled)
 	config.set_value("settings", "music_enabled", music_enabled)
 	config.set_value("settings", "bgm_volume_percent", bgm_volume_percent)
@@ -735,6 +912,11 @@ func load_game() -> void:
 			unlocked_stickers.append(str(s))
 
 	equipped_sticker = str(config.get_value("progress", "equipped_sticker", ""))
+	timer_best_score = int(config.get_value("challenges", "timer_best_score", 0))
+	timer_best_solved = int(config.get_value("challenges", "timer_best_solved", 0))
+	endless_best_score = int(config.get_value("challenges", "endless_best_score", 0))
+	endless_best_solved = int(config.get_value("challenges", "endless_best_solved", 0))
+	endless_best_streak = int(config.get_value("challenges", "endless_best_streak", 0))
 	sfx_enabled = bool(config.get_value("settings", "sfx_enabled", true))
 	music_enabled = bool(config.get_value("settings", "music_enabled", true))
 	bgm_volume_percent = clampi(int(config.get_value("settings", "bgm_volume_percent", 100)), 0, 100)
